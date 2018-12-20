@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Expenses &amp; Notes</string>
+    <string name="title_activity_main"><![CDATA[My Notes & Expenses]]></string>
+    <string name="app_author">Miguel Ángel López Arcos</string>
+    <string name="app_author_email">migue300995@gmail.com</string>
+    <string name="about_app">Esta App fue programada por Miguel Ángel López Arcos x\'D</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Menu drawer Strings -->
+    <string name="menu_drawer_settings_label">Opciones</string>
+    <string name="menu_drawer_settings_sync_label">Sincronizar</string>
+    <string name="menu_drawer_settings_schedule_label">Programar horarios</string>
+    <string name="menu_drawer_settings_about_label">Acerca De…</string>
+    <string name="menu_drawer_settings_close_session">Cerrar sesión</string>
+    <string name="fragment_expenses_title">Gastos</string>
+    <string name="fragment_my_money_title">Mi dinero</string>
+    <string name="fragment_notepad_title">Bloc de Notas</string>
+    <string name="fragment_deleted_notes_title">Notas Eliminadas</string>
+
+    <string-array name="expenses_categories">
+        <item>{"name":"Cómida", "iconId":1}</item>
+        <item>{"name":"Transporte", "iconId":1}</item>
+        <item>{"name":"Todo el dia alv","iconId":1}</item>
+        <item>{"name":"Belleza","iconId":1}</item>
+        <item>{"name":"Mascota","iconId":1}</item>
+    </string-array>
+
+    <string-array name="icon_names">
+        <item>Dog</item>
+        <item>Food</item>
+    </string-array>
+
+    <string-array name="icon_paths">
+        <item>dog</item>
+        <item>food</item>
+    </string-array>
+</resources>
