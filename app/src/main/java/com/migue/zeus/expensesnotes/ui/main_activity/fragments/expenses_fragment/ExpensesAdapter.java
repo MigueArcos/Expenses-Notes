@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.migue.zeus.expensesnotes.R;
 import com.migue.zeus.expensesnotes.data.models.Expense;
+import com.migue.zeus.expensesnotes.data.models.ExpenseWithDetails;
 import com.migue.zeus.expensesnotes.data.models.Finance;
 
 import java.util.Date;
@@ -86,10 +87,10 @@ public class ExpensesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
         @Override
-        public void renderItem(Expense expense) {
+        public void renderItem(ExpenseWithDetails expense) {
             icon.setImageResource(Finance.iconId);
-            nameText.setText(expense.getName());
-            valueText.setText(String.valueOf(expense.getValue()));
+            nameText.setText(expense.getExpense().getName());
+            valueText.setText(String.valueOf(expense.getTotal()));
         }
     }
 

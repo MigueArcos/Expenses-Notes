@@ -2,6 +2,7 @@ package com.migue.zeus.expensesnotes.ui.main_activity.fragments.expenses_fragmen
 
 
 import com.migue.zeus.expensesnotes.data.models.Expense;
+import com.migue.zeus.expensesnotes.data.models.ExpenseWithDetails;
 import com.migue.zeus.expensesnotes.data.models.Finance;
 
 import java.util.Date;
@@ -26,7 +27,7 @@ public class ExpensesContract {
         int getViewType(int position);
     }
     public interface ItemView{
-        void renderItem(Expense expense);
+        void renderItem(ExpenseWithDetails expense);
     }
 
     public interface HeaderItemView {

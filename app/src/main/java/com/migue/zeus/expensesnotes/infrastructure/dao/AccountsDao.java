@@ -12,15 +12,7 @@ import java.util.List;
 
 
 @Dao
-public interface AccountsDao {
+public interface AccountsDao extends BaseDao<Account>{
     @Query("SELECT * FROM Accounts")
     List<Account> getAllAccounts();
-    @Insert
-    void insert(Account... accounts);
-
-    @Update
-    void update(Account... accounts);
-
-    @Delete
-    void delete(Account... accounts);
 }

@@ -2,7 +2,7 @@ package com.migue.zeus.expensesnotes.ui.main_activity.fragments.expenses_fragmen
 
 
 import com.migue.zeus.expensesnotes.data.AppDatabase;
-import com.migue.zeus.expensesnotes.data.models.Expense;
+import com.migue.zeus.expensesnotes.data.models.ExpenseWithDetails;
 import com.migue.zeus.expensesnotes.infrastructure.dao.ExpensesDao;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class ExpensesModel implements ExpensesContract.Model {
     private final List<Date> expensesDates;
     //Data to be presented in recyclerView
     private final List<ListItem> items;
-    private ExpensesDao expensesDao = AppDatabase.getInstance().getExpensesDao();
+    private ExpensesDao expensesDao = AppDatabase.getInstance().expensesDao();
     public static final int MAIN_HEADER_VIEW = 1;
     public static final int HEADER_VIEW = 2;
     public static final int ITEM_VIEW = 3;
@@ -30,9 +30,9 @@ public class ExpensesModel implements ExpensesContract.Model {
             double subTotal = 0;
             HeaderItemData header = new HeaderItemData();
             items.add(header);
-            for (Expense expense : expensesDao.getExpensesByDate(date)){
+            for (ExpenseWithDetails expense : expensesDao.getExpensesByDate(date)){
                 items.add(new ItemData(expense));
-                subTotal += expense.getValue();
+                subTotal += expense.getTotal();
             }
             header.setTotal(subTotal);
             header.setDate(date);
@@ -74,17 +74,13 @@ public class ExpensesModel implements ExpensesContract.Model {
     }
 
     public class ItemData implements ListItem{
-        private Expense expense;
+        private ExpenseWithDetails expense;
 
-        public Expense getExpense() {
+        public ExpenseWithDetails getExpense() {
             return expense;
         }
 
-        public void setExpense(Expense expense) {
-            this.expense = expense;
-        }
-
-        public ItemData(Expense expense) {
+        public ItemData(ExpenseWithDetails expense) {
             this.expense = expense;
         }
 

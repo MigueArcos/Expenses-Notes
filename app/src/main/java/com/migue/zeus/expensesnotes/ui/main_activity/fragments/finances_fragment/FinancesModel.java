@@ -9,7 +9,7 @@ import java.util.List;
 public class FinancesModel implements FinancesContract.Model {
     private FinancesContract.Presenter presenter;
     private final List<Finance> financeList;
-    private FinancesDao financesDao = AppDatabase.getInstance().getFinancesDao();
+    private FinancesDao financesDao = AppDatabase.getInstance().financesDao();
     public FinancesModel(FinancesContract.Presenter presenter) {
         this.presenter = presenter;
         financeList = financesDao.getAllFinances();
