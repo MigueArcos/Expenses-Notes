@@ -2,6 +2,8 @@ package com.migue.zeus.expensesnotes.data.models
 
 import android.arch.persistence.room.*
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 
 import com.migue.zeus.expensesnotes.R
 
@@ -10,16 +12,23 @@ import com.migue.zeus.expensesnotes.R
         foreignKeys = [ForeignKey(entity = Icon::class, parentColumns = ["Id"], childColumns = ["IconId"])],
         indices = [Index("IconId")])
 class ExpenseCategory : BaseEntity {
-
+    override fun getReadableName(): String? {
+        return name
+    }
     @ColumnInfo(name = "Name")
     var name: String? = null
     @ColumnInfo(name = "IconId")
-    var iconId: Int? = null
+    var iconId: Long? = null
+
+    constructor(parcel: Parcel) : this() {
+        name = parcel.readString()
+        iconId = parcel.readValue(Long::class.java.classLoader) as? Long
+    }
 
     constructor()
 
     @Ignore
-    constructor(name: String, iconId: Int) {
+    constructor(name: String, iconId: Long) {
         this.name = name
         this.iconId = iconId
     }
@@ -28,7 +37,25 @@ class ExpenseCategory : BaseEntity {
         this.name = name
     }
 
-    companion object {
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        super.writeToParcel(parcel, flags)
+        parcel.writeString(name)
+        parcel.writeValue(iconId)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<ExpenseCategory> {
+        override fun createFromParcel(parcel: Parcel): ExpenseCategory {
+            return ExpenseCategory(parcel)
+        }
+
+        override fun newArray(size: Int): Array<ExpenseCategory?> {
+            return arrayOfNulls(size)
+        }
 
         fun populateData(context: Context): Array<ExpenseCategory?> {
             val rawCategories = context.resources.getStringArray(R.array.expenses_categories)

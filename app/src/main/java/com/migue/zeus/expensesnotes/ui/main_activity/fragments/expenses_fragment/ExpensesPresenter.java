@@ -1,5 +1,7 @@
 package com.migue.zeus.expensesnotes.ui.main_activity.fragments.expenses_fragment;
 
+import com.migue.zeus.expensesnotes.data.models.ExpenseWithDetails;
+
 public class ExpensesPresenter implements ExpensesContract.Presenter{
     private ExpensesContract.Model model;
     private ExpensesContract.View view;
@@ -31,5 +33,17 @@ public class ExpensesPresenter implements ExpensesContract.Presenter{
     @Override
     public int getViewType(int position) {
         return model.getViewType(position);
+    }
+
+    @Override
+    public void reloadItems() {
+        model.reloadItems();
+        view.onItemsReloaded();
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        ExpenseWithDetails expenseWithDetails = model.onItemClick(position);
+        view.onItemClick(position, expenseWithDetails);
     }
 }

@@ -2,6 +2,8 @@ package com.migue.zeus.expensesnotes.data.models
 
 
 import android.arch.persistence.room.*
+import android.os.Parcel
+import android.os.Parcelable
 import com.migue.zeus.expensesnotes.infrastructure.utils.Converters.parseDate
 
 import java.text.ParseException
@@ -14,31 +16,59 @@ import java.util.Locale
         foreignKeys = [ForeignKey(entity = ExpenseCategory::class, parentColumns = ["Id"], childColumns = ["ExpenseCategoryId"])],
         indices = [Index("ExpenseCategoryId")])
 class Expense : BaseEntity {
+    override fun getReadableName(): String? {
+        return name
+    }
     @ColumnInfo(name = "Name")
     var name: String? = null
     @ColumnInfo(name = "ExpenseCategoryId")
-    var expenseCategoryId: Int? = null
+    var expenseCategoryId: Long? = null
     @ColumnInfo(name = "Date")
-    var date: Date? = null
+    var date: Date? = Date()
+
+    constructor(parcel: Parcel) : super(parcel) {
+        name = parcel.readString()
+        expenseCategoryId = parcel.readValue(Long::class.java.classLoader) as? Long
+        date = parcel.readValue(Date::class.java.classLoader) as? Date
+    }
 
     constructor()
 
     @Ignore
-    constructor(name: String, date: Date?, expenseCategoryId: Int) {
+    constructor(name: String, date: Date?, expenseCategoryId: Long) {
         this.expenseCategoryId = expenseCategoryId
         this.name = name
         this.date = date
     }
 
-    companion object {
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        super.writeToParcel(parcel, flags)
+        parcel.writeString(name)
+        parcel.writeValue(expenseCategoryId)
+        parcel.writeValue(date)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Expense> {
+        override fun createFromParcel(parcel: Parcel): Expense {
+            return Expense(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Expense?> {
+            return arrayOfNulls(size)
+        }
 
         fun populateData(): Array<Expense> {
 
             return arrayOf(
                     Expense("Expense a", parseDate("2018-12-01"), 1),
-                    Expense("Expense b", parseDate("2018-12-01"), 1),
-                    Expense("Expense c", parseDate("2018-12-05"), 1),
-                    Expense("Expense d", parseDate("2018-12-07"), 1),
+                    Expense("Expense b", parseDate("2018-12-01"), 2),
+                    Expense("Expense c", parseDate("2018-12-05"), 3),
+                    Expense("Expense d", parseDate("2018-12-07"), 4),
                     Expense("Expense e", parseDate("2018-12-07"), 1),
                     Expense("Expense f", parseDate("2018-12-10"), 1),
                     Expense("Expense g", parseDate("2018-12-10"), 1),

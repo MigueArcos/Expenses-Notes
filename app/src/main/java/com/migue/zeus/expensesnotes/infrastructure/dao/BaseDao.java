@@ -10,10 +10,17 @@ import android.arch.persistence.room.Update;
 public interface BaseDao<DataModel> {
 
     @Insert
-    void insert(DataModel... data);
+    long[] insert(DataModel... data);
+
+    @Insert
+    long insert(DataModel data);
 
     @Update
     void update(DataModel... data);
+
+    @Update
+    void update(DataModel data);
+
 
     @Delete
     void delete(DataModel... data);

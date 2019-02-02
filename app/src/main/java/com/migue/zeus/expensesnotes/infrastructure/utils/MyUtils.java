@@ -7,19 +7,47 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class MyUtils {
     public static final String GLOBAL_LOG_TAG = "Log Tag";
-    public static final String DATE_FORMAT = "dd/MM/yyyy\' a las \'hh:mm a";
+    public static final String DATE_TIME_FORMAT = "dd/MM/yyyy\' a las \'hh:mm a";
+    public static final String DATE_FORMAT = "dd/MM/yyyy";
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
     public static void hideKeyboard(Activity activity) {
         View view = activity.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             assert imm != null;
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public static String formatCurrency(double number){
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+        int decimalPart = (int) ((number - (int) number) * 100);
+        if (decimalPart == 0) currencyFormatter.setMinimumFractionDigits(0);
+        return currencyFormatter.format(number);
+    }
+
+    public static void fromStringDate(String date, Calendar calendar){
+        try {
+            calendar.setTime(dateFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+    public static Date toDate(String date){
+        try {
+            return dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new Date();
         }
     }
 
@@ -41,7 +69,7 @@ public class MyUtils {
 
     public static String getTime12HoursFormat(long timeMillis) {
         Date date = new Date(timeMillis);
-        return new SimpleDateFormat(DATE_FORMAT, Locale.US).format(date);
+        return new SimpleDateFormat(DATE_TIME_FORMAT, Locale.US).format(date);
     }
 
     public static void changeStatusBarColor(Activity activity, int colorResId){

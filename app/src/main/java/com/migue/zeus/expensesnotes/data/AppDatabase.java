@@ -68,7 +68,27 @@ public abstract class AppDatabase extends RoomDatabase {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
-                        PopulateDbAsync task = new PopulateDbAsync(Instance, Icon.Companion.populateData(context), Account.Companion.populateData(), ExpenseCategory.Companion.populateData(context), Finance.populateData(), Expense.Companion.populateData(), ExpenseDetail.Companion.populateData());
+                        db.execSQL("CREATE TRIGGER UpdateAccountOnExpenseDetailInsertion\n" +
+                                "AFTER INSERT ON ExpensesDetails\n" +
+                                "BEGIN\n" +
+                                "    UPDATE Accounts SET Value = Value - new.Value WHERE Id = new.AccountId;\n" +
+                                "END;");
+                        db.execSQL("CREATE TRIGGER UpdateAccountOnExpenseModification\n" +
+                                "AFTER UPDATE ON ExpensesDetails\n" +
+                                "BEGIN\n" +
+                                "    UPDATE Accounts SET Value = Value + old.Value - new.Value WHERE Id = new.AccountId;\n" +
+                                "END;");
+                        db.execSQL("CREATE TRIGGER UpdateAccountOnExpenseDetailDeletion\n" +
+                                "BEFORE DELETE ON ExpensesDetails\n" +
+                                "BEGIN\n" +
+                                "    UPDATE Accounts SET Value = Value + old.Value WHERE Id = old.AccountId;\n" +
+                                "END;");
+                        db.execSQL("CREATE TRIGGER UpdateAccountOnExpenseDeletion\n" +
+                                "BEFORE DELETE ON Expenses\n" +
+                                "BEGIN\n" +
+                                "    DELETE FROM ExpensesDetails WHERE ExpenseId = old.Id;\n" +
+                                "END;");
+                        PopulateDbAsync task = new PopulateDbAsync(Instance, Icon.Companion.populateData(context), Account.CREATOR.populateData(), ExpenseCategory.CREATOR.populateData(context), Finance.populateData(), Expense.CREATOR.populateData(), ExpenseDetail.CREATOR.populateData());
                         task.execute();
                     }
                 })

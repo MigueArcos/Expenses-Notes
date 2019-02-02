@@ -10,7 +10,7 @@ import com.migue.zeus.expensesnotes.R
 class Icon {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "Id")
-    var id: Int = 0
+    var id: Long? = null
     @ColumnInfo(name = "Name")
     var name: String? = null
     @ColumnInfo(name = "Path")

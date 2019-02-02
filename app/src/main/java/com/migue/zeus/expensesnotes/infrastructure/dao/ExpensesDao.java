@@ -20,6 +20,9 @@ public interface ExpensesDao extends BaseDao<Expense>{
     @Query("SELECT Date FROM Expenses GROUP BY Date")
     List<Date> getExpensesDates();
 
+    @Query("SELECT * FROM Expenses WHERE Id = :id")
+    ExpenseWithDetails getExpenseById(int id);
+
     @Query("SELECT * FROM Expenses WHERE Date = :date")
     List<ExpenseWithDetails> getExpensesByDate(Date date);
 }

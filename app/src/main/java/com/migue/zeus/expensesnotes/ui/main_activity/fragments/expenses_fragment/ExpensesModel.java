@@ -4,6 +4,7 @@ package com.migue.zeus.expensesnotes.ui.main_activity.fragments.expenses_fragmen
 import com.migue.zeus.expensesnotes.data.AppDatabase;
 import com.migue.zeus.expensesnotes.data.models.ExpenseWithDetails;
 import com.migue.zeus.expensesnotes.infrastructure.dao.ExpensesDao;
+import com.migue.zeus.expensesnotes.infrastructure.utils.MyUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,9 +21,15 @@ public class ExpensesModel implements ExpensesContract.Model {
     public static final int ITEM_VIEW = 3;
     public ExpensesModel(ExpensesContract.Presenter presenter) {
         this.presenter = presenter;
-        expensesDates =  expensesDao.getExpensesDates();
-        //items is a list containing all the data that is shown in recyclerView (3 distinct type of objects)
+        expensesDates = new ArrayList<>();
         items = new ArrayList<>();
+        loadExpenses();
+    }
+    private void loadExpenses(){
+        expensesDates.clear();
+        expensesDates.addAll(expensesDao.getExpensesDates());
+        //items is a list containing all the data that is shown in recyclerView (3 distinct type of objects)
+        items.clear();
         double total = 0;
         MainHeaderItemData mainHeader = new MainHeaderItemData();
         items.add(mainHeader);
@@ -40,7 +47,6 @@ public class ExpensesModel implements ExpensesContract.Model {
         }
         mainHeader.setTotal(total);
     }
-
     @Override
     public int getItemCount() {
         return items.size();
@@ -54,18 +60,28 @@ public class ExpensesModel implements ExpensesContract.Model {
     @Override
     public void bindHeaderData(ExpensesContract.HeaderItemView header, int position) {
         HeaderItemData dataItem = (HeaderItemData) items.get(position);
-        header.showTotal(dataItem.getTotal());
+        header.showTotal(MyUtils.formatCurrency(dataItem.getTotal()));
         header.showDate(dataItem.getDate());
     }
 
     @Override
     public void bindMainHeaderItemView(ExpensesContract.MainHeaderItemView mainHeaderItemView) {
-        mainHeaderItemView.showTotal(((MainHeaderItemData)items.get(0)).getTotal());
+        mainHeaderItemView.showTotal(MyUtils.formatCurrency(((MainHeaderItemData)items.get(0)).getTotal()));
     }
 
     @Override
     public int getViewType(int position) {
         return items.get(position).getViewType();
+    }
+
+    @Override
+    public void reloadItems() {
+        loadExpenses();
+    }
+
+    @Override
+    public ExpenseWithDetails onItemClick(int position) {
+        return ((ItemData) items.get(position)).getExpense();
     }
 
     //These classes are used to manage the data used in the recyclerView, since this recycler has 3 distinct view types

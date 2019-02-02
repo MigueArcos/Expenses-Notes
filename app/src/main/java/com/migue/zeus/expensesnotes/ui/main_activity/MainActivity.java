@@ -2,7 +2,6 @@ package com.migue.zeus.expensesnotes.ui.main_activity;
 
 import android.app.AlarmManager;
 import android.app.ProgressDialog;
-import android.arch.persistence.room.Database;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -16,17 +15,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.migue.zeus.expensesnotes.R;
 import com.migue.zeus.expensesnotes.data.AppDatabase;
-import com.migue.zeus.expensesnotes.data.models.ExpenseCategory;
+import com.migue.zeus.expensesnotes.data.models.Icon;
 import com.migue.zeus.expensesnotes.infrastructure.Cache;
 import com.migue.zeus.expensesnotes.infrastructure.utils.MyUtils;
 import com.migue.zeus.expensesnotes.ui.main_activity.fragments.expenses_fragment.ExpensesFragment;
 import com.migue.zeus.expensesnotes.ui.main_activity.fragments.finances_fragment.FinancesFragment;
-
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ComponentName receiver;
     private FinancesFragment financesFragment;
     private ExpensesFragment expensesFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         cache = Cache.getInstance(this);
@@ -57,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initializeServices();
         initializeFragments();
     }
-    private void initializeViews(){
+
+    private void initializeViews() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
@@ -67,13 +65,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-    private void initializeServices(){
+
+    private void initializeServices() {
         AppDatabase.getInstance(this);
     }
-    private void initializeFragments(){
+
+    private void initializeFragments() {
         financesFragment = new FinancesFragment();
         expensesFragment = new ExpensesFragment();
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -103,7 +104,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.close_session:
                 return false;
         }
-        if (fragment != null) getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+        if (fragment != null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
         item.setChecked(true);
         if (getSupportActionBar() != null) getSupportActionBar().setTitle(item.getTitle());
         drawer.closeDrawer(GravityCompat.START);

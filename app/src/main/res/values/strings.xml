@@ -19,6 +19,13 @@
     <string name="fragment_notepad_title">Bloc de Notas</string>
     <string name="fragment_deleted_notes_title">Notas Eliminadas</string>
 
+    <!-- Activity Add Expense or Income resources -->
+    <string name="activity_add_expense_name_edit">Título</string>
+    <string name="activity_add_expense_category_text">Categoría</string>
+    <string name="activity_add_expense_account_text">Cuenta</string>
+    <string name="empty_list_label">No hay datos</string>
+    <string name="activity_add_expenses_value_hint">Valor</string>
+
     <string-array name="expenses_categories">
         <item>{"name":"Cómida", "iconId":1}</item>
         <item>{"name":"Transporte", "iconId":1}</item>

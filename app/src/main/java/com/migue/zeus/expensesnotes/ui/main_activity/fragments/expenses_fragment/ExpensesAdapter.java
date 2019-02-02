@@ -23,7 +23,6 @@ public class ExpensesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private ExpensesContract.Presenter presenter;
 
-
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new TripItemTouchHelperCallback(this, recyclerView));
@@ -74,7 +73,7 @@ public class ExpensesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-    public class ExpenseViewHolder extends RecyclerView.ViewHolder implements ExpensesContract.ItemView {
+    public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ExpensesContract.ItemView {
         private ImageView icon;
         private TextView nameText, valueText;
 
@@ -83,6 +82,7 @@ public class ExpensesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             icon = itemView.findViewById(R.id.icon);
             nameText = itemView.findViewById(R.id.name);
             valueText = itemView.findViewById(R.id.creation_date);
+            itemView.setOnClickListener(this);
         }
 
 
@@ -91,6 +91,11 @@ public class ExpensesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             icon.setImageResource(Finance.iconId);
             nameText.setText(expense.getExpense().getName());
             valueText.setText(String.valueOf(expense.getTotal()));
+        }
+
+        @Override
+        public void onClick(View v) {
+            presenter.onItemClick(getAdapterPosition());
         }
     }
 
@@ -108,8 +113,8 @@ public class ExpensesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         @Override
-        public void showTotal(double total) {
-            totalText.setText(String.valueOf(total));
+        public void showTotal(String total) {
+            totalText.setText(total);
         }
     }
 
@@ -123,8 +128,8 @@ public class ExpensesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
         @Override
-        public void showTotal(double total) {
-            totalText.setText(String.valueOf(total));
+        public void showTotal(String total) {
+            totalText.setText(total);
         }
 
         @Override
