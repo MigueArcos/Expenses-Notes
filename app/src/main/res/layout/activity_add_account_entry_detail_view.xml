@@ -12,7 +12,7 @@
         android:layout_marginTop="8dp"
         android:textSize="15sp"
         android:gravity="start"
-        android:text="@string/activity_add_expense_account_text"/>
+        android:text="@string/activity_add_account_entry_account_text"/>
 
     <Spinner
         android:id="@+id/account_spinner"
@@ -28,7 +28,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:hint="@string/activity_add_expenses_value_hint"
+        android:hint="@string/activity_add_account_entries_value_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

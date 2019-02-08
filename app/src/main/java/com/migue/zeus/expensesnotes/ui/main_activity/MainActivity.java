@@ -18,10 +18,9 @@ import android.view.MenuItem;
 
 import com.migue.zeus.expensesnotes.R;
 import com.migue.zeus.expensesnotes.data.AppDatabase;
-import com.migue.zeus.expensesnotes.data.models.Icon;
 import com.migue.zeus.expensesnotes.infrastructure.Cache;
 import com.migue.zeus.expensesnotes.infrastructure.utils.MyUtils;
-import com.migue.zeus.expensesnotes.ui.main_activity.fragments.expenses_fragment.ExpensesFragment;
+import com.migue.zeus.expensesnotes.ui.main_activity.fragments.accounts_entries_fragment.AccountEntriesFragment;
 import com.migue.zeus.expensesnotes.ui.main_activity.fragments.finances_fragment.FinancesFragment;
 
 
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private PackageManager packageManager;
     private ComponentName receiver;
     private FinancesFragment financesFragment;
-    private ExpensesFragment expensesFragment;
+    private AccountEntriesFragment accountEntriesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initializeFragments() {
         financesFragment = new FinancesFragment();
-        expensesFragment = new ExpensesFragment();
+        accountEntriesFragment = new AccountEntriesFragment();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -86,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.expenses:
-                fragment = expensesFragment;
+                fragment = accountEntriesFragment;
                 break;
             case R.id.money_manager:
                 fragment = financesFragment;

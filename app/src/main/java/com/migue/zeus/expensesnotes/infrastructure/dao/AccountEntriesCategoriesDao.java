@@ -7,21 +7,21 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.migue.zeus.expensesnotes.data.models.ExpenseCategory;
+import com.migue.zeus.expensesnotes.data.models.AccountEntryCategory;
 
 import java.util.List;
 
 @Dao
-public interface ExpensesCategoriesDao {
-    @Query("SELECT * FROM ExpensesCategories")
-    List<ExpenseCategory> getAllExpenseCategories();
+public interface AccountEntriesCategoriesDao {
+    @Query("SELECT * FROM AccountEntriesCategories")
+    List<AccountEntryCategory> getAllAccountEntriesCategories();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(ExpenseCategory... expenseCategories);
+    void insert(AccountEntryCategory... accountEntriesCategories);
 
     @Update
-    void update(ExpenseCategory... expenseCategories);
+    void update(AccountEntryCategory... accountEntriesCategories);
 
     @Delete
-    void delete(ExpenseCategory... expenseCategories);
+    void delete(AccountEntryCategory... accountEntriesCategories);
 }

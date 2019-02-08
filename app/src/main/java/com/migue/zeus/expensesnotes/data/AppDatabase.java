@@ -11,22 +11,22 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import com.migue.zeus.expensesnotes.data.models.Account;
-import com.migue.zeus.expensesnotes.data.models.Expense;
-import com.migue.zeus.expensesnotes.data.models.ExpenseCategory;
-import com.migue.zeus.expensesnotes.data.models.ExpenseDetail;
+import com.migue.zeus.expensesnotes.data.models.AccountEntry;
+import com.migue.zeus.expensesnotes.data.models.AccountEntryCategory;
+import com.migue.zeus.expensesnotes.data.models.AccountEntryDetail;
 import com.migue.zeus.expensesnotes.data.models.Finance;
 import com.migue.zeus.expensesnotes.data.models.Icon;
+import com.migue.zeus.expensesnotes.infrastructure.dao.AccountEntriesCategoriesDao;
+import com.migue.zeus.expensesnotes.infrastructure.dao.AccountEntriesDetailsDao;
 import com.migue.zeus.expensesnotes.infrastructure.dao.AccountsDao;
-import com.migue.zeus.expensesnotes.infrastructure.dao.ExpensesCategoriesDao;
-import com.migue.zeus.expensesnotes.infrastructure.dao.ExpensesDao;
-import com.migue.zeus.expensesnotes.infrastructure.dao.ExpensesDetailsDao;
+import com.migue.zeus.expensesnotes.infrastructure.dao.AccountEntriesDao;
 import com.migue.zeus.expensesnotes.infrastructure.dao.FinancesDao;
 import com.migue.zeus.expensesnotes.infrastructure.dao.IconsDao;
 import com.migue.zeus.expensesnotes.infrastructure.utils.Converters;
 
 
 @Database(
-        entities = {Expense.class, Account.class, Icon.class, ExpenseCategory.class, Finance.class, ExpenseDetail.class},
+        entities = {AccountEntry.class, Account.class, Icon.class, AccountEntryCategory.class, Finance.class, AccountEntryDetail.class},
         version = 1,
         exportSchema = false)
 @TypeConverters({Converters.class})
@@ -35,17 +35,17 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase Instance;
 
-    public abstract ExpensesDao expensesDao();
+    public abstract AccountEntriesDao accountEntriesDao();
 
     public abstract AccountsDao accountsDao();
 
     public abstract FinancesDao financesDao();
 
-    public abstract ExpensesCategoriesDao expensesCategoriesDao();
+    public abstract AccountEntriesCategoriesDao accountEntriesCategoriesDao();
 
     public abstract IconsDao iconsDao();
 
-    public abstract ExpensesDetailsDao expensesDetailsDao();
+    public abstract AccountEntriesDetailsDao accountEntriesDetailsDao();
 
     private Context appContext;
 
@@ -68,27 +68,27 @@ public abstract class AppDatabase extends RoomDatabase {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
-                        db.execSQL("CREATE TRIGGER UpdateAccountOnExpenseDetailInsertion\n" +
-                                "AFTER INSERT ON ExpensesDetails\n" +
+                        db.execSQL("CREATE TRIGGER UpdateAccountOnAccountEntryDetailInsertion\n" +
+                                "AFTER INSERT ON AccountEntriesDetails\n" +
                                 "BEGIN\n" +
-                                "    UPDATE Accounts SET Value = Value - new.Value WHERE Id = new.AccountId;\n" +
+                                "    UPDATE Accounts SET Value = Value + (new.Value * (SELECT Revenue FROM AccountEntries WHERE Id = new.AccountEntryId)) WHERE Id = new.AccountId;\n" +
                                 "END;");
-                        db.execSQL("CREATE TRIGGER UpdateAccountOnExpenseModification\n" +
-                                "AFTER UPDATE ON ExpensesDetails\n" +
+                        db.execSQL("CREATE TRIGGER UpdateAccountOnAccountEntryModification\n" +
+                                "AFTER UPDATE ON AccountEntriesDetails\n" +
                                 "BEGIN\n" +
-                                "    UPDATE Accounts SET Value = Value + old.Value - new.Value WHERE Id = new.AccountId;\n" +
+                                "    UPDATE Accounts SET Value = Value + old.Value + (new.Value * (SELECT Revenue FROM AccountEntries WHERE Id = new.AccountEntryId)) WHERE Id = new.AccountId;\n" +
                                 "END;");
-                        db.execSQL("CREATE TRIGGER UpdateAccountOnExpenseDetailDeletion\n" +
-                                "BEFORE DELETE ON ExpensesDetails\n" +
+                        db.execSQL("CREATE TRIGGER UpdateAccountOnAccountEntryDetailDeletion\n" +
+                                "BEFORE DELETE ON AccountEntriesDetails\n" +
                                 "BEGIN\n" +
                                 "    UPDATE Accounts SET Value = Value + old.Value WHERE Id = old.AccountId;\n" +
                                 "END;");
-                        db.execSQL("CREATE TRIGGER UpdateAccountOnExpenseDeletion\n" +
-                                "BEFORE DELETE ON Expenses\n" +
+                        db.execSQL("CREATE TRIGGER UpdateAccountOnAccountEntryDeletion\n" +
+                                "BEFORE DELETE ON AccountEntries\n" +
                                 "BEGIN\n" +
-                                "    DELETE FROM ExpensesDetails WHERE ExpenseId = old.Id;\n" +
+                                "    DELETE FROM AccountEntriesDetails WHERE AccountEntryId = old.Id;\n" +
                                 "END;");
-                        PopulateDbAsync task = new PopulateDbAsync(Instance, Icon.Companion.populateData(context), Account.CREATOR.populateData(), ExpenseCategory.CREATOR.populateData(context), Finance.populateData(), Expense.CREATOR.populateData(), ExpenseDetail.CREATOR.populateData());
+                        PopulateDbAsync task = new PopulateDbAsync(Instance, Icon.Companion.populateData(context), Account.CREATOR.populateData(), AccountEntryCategory.CREATOR.populateData(context), Finance.populateData(), AccountEntry.CREATOR.populateData(), AccountEntryDetail.CREATOR.populateData());
                         task.execute();
                     }
                 })
@@ -99,19 +99,19 @@ public abstract class AppDatabase extends RoomDatabase {
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
 
         private final AppDatabase mDb;
-        private final Expense[] expenses;
-        private final ExpenseCategory[] categories;
+        private final AccountEntry[] accountEntries;
+        private final AccountEntryCategory[] categories;
         private final Icon[] icons;
         private final Finance[] finances;
-        private final ExpenseDetail[] expenseDetails;
+        private final AccountEntryDetail[] accountEntriesDetails;
         private final Account[] accounts;
-        PopulateDbAsync(AppDatabase db, Icon[] icons, Account[] accounts,  ExpenseCategory[] categories, Finance[] finances, Expense[] expenses, ExpenseDetail[] expenseDetails) {
+        PopulateDbAsync(AppDatabase db, Icon[] icons, Account[] accounts, AccountEntryCategory[] categories, Finance[] finances, AccountEntry[] accountEntries, AccountEntryDetail[] accountEntriesDetails) {
             mDb = db;
             this.icons = icons;
             this.categories = categories;
             this.finances = finances;
-            this.expenses = expenses;
-            this.expenseDetails = expenseDetails;
+            this.accountEntries = accountEntries;
+            this.accountEntriesDetails = accountEntriesDetails;
             this.accounts = accounts;
         }
 
@@ -119,10 +119,10 @@ public abstract class AppDatabase extends RoomDatabase {
         protected Void doInBackground(final Void... params) {
             mDb.iconsDao().insert(icons);
             mDb.accountsDao().insert(accounts);
-            mDb.expensesCategoriesDao().insert(categories);
+            mDb.accountEntriesCategoriesDao().insert(categories);
             mDb.financesDao().insert(finances);
-            mDb.expensesDao().insert(expenses);
-            mDb.expensesDetailsDao().insert(expenseDetails);
+            mDb.accountEntriesDao().insert(accountEntries);
+            mDb.accountEntriesDetailsDao().insert(accountEntriesDetails);
             return null;
         }
     }

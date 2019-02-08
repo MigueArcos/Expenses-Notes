@@ -15,57 +15,56 @@ import android.widget.Spinner;
 import com.migue.zeus.expensesnotes.R;
 import com.migue.zeus.expensesnotes.data.models.Account;
 import com.migue.zeus.expensesnotes.data.models.BaseEntity;
-import com.migue.zeus.expensesnotes.data.models.ExpenseCategory;
-import com.migue.zeus.expensesnotes.data.models.ExpenseDetail;
-import com.migue.zeus.expensesnotes.data.models.ExpenseWithDetails;
+import com.migue.zeus.expensesnotes.data.models.AccountEntryCategory;
+import com.migue.zeus.expensesnotes.data.models.AccountEntryDetail;
+import com.migue.zeus.expensesnotes.data.models.AccountEntryWithDetails;
 import com.migue.zeus.expensesnotes.infrastructure.utils.MyUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AddExpensesOrIncomesActivity extends AppCompatActivity implements AddExpensesOrIncomesContract.View{
+public class AddAccountEntryActivity extends AppCompatActivity implements AddAccountEntryContract.View{
     private EditText nameEdit, dateEdit;
     private Spinner categorySpinner;
     private LinearLayout container;
-    private AddExpensesOrIncomesContract.Presenter presenter;
+    private AddAccountEntryContract.Presenter presenter;
     private final Calendar myCalendar = Calendar.getInstance();
     //This spinner adapter is global because it can be shared by multiple spinners
     private SpinnerAdapter<Account> accountsAdapter;
-    private final List<ExpenseDetailView> expenseDetailViews = new ArrayList<>();
-    private ExpenseWithDetails expenseWithDetails;
-    private boolean isNewExpense = true;
+    private final List<AccountEntryDetailView> accountEntryDetailViews = new ArrayList<>();
+    private AccountEntryWithDetails accountEntryWithDetails;
+    private boolean isNewAccountEntry = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_expense_incomes);
-        presenter = new AddExpensesOrIncomesPresenter(this);
+        setContentView(R.layout.activity_add_account_entry);
+        presenter = new AddAccountEntryPresenter(this);
         nameEdit = findViewById(R.id.name_edit);
         dateEdit = findViewById(R.id.date_edit);
         categorySpinner = findViewById(R.id.category_spinner);
         container = findViewById(R.id.container);
 
         presenter.getAccounts();
-        presenter.getExpenseCategories();
+        presenter.getAccountEntryCategories();
 
         Bundle data = getIntent().getExtras();
 
-        if (data != null && data.getParcelable("Expense") != null){
-            isNewExpense = false;
+        if (data != null && data.getParcelable("AccountEntry") != null){
+            isNewAccountEntry = false;
 
-            expenseWithDetails = data.getParcelable(("Expense"));
-            presenter.getExpenseDate(expenseWithDetails.getExpense());
-            presenter.getExpenseTitle(expenseWithDetails.getExpense());
-            categorySpinner.setSelection(((SpinnerAdapter)categorySpinner.getAdapter()).getItemPosition(expenseWithDetails.getExpense().getExpenseCategoryId()));
-            for (ExpenseDetail expenseDetail : expenseWithDetails.getExpenseDetails()){
-                addNewExpenseDetail(expenseDetail);
+            accountEntryWithDetails = data.getParcelable("AccountEntry");
+            presenter.getAccountEntryDate(accountEntryWithDetails.getAccountEntry());
+            presenter.getAccountEntryTitle(accountEntryWithDetails.getAccountEntry());
+            categorySpinner.setSelection(((SpinnerAdapter)categorySpinner.getAdapter()).getItemPosition(accountEntryWithDetails.getAccountEntry().getAccountEntryCategoryId()));
+            for (AccountEntryDetail accountEntryDetail : accountEntryWithDetails.getAccountEntryDetails()){
+                addNewExpenseDetail(accountEntryDetail);
             }
         } else{
-            expenseWithDetails = new ExpenseWithDetails();
-            presenter.getExpenseDate();
+            accountEntryWithDetails = new AccountEntryWithDetails();
+            presenter.getAccountEntryDate();
             addNewExpenseDetail();
         }
 
@@ -74,7 +73,7 @@ public class AddExpensesOrIncomesActivity extends AppCompatActivity implements A
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 new DatePickerDialog(
-                        AddExpensesOrIncomesActivity.this,
+                        AddAccountEntryActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -93,10 +92,10 @@ public class AddExpensesOrIncomesActivity extends AppCompatActivity implements A
     }
 
     @Override
-    public void showCategories(List<ExpenseCategory> expenseCategories) {
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter<>(this, android.R.layout.simple_spinner_item, expenseCategories);
+    public void showCategories(List<AccountEntryCategory> accountEntryCategories) {
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter<>(this, android.R.layout.simple_spinner_item, accountEntryCategories);
         categorySpinner.setAdapter(spinnerAdapter);
-        //ExpenseCategory category = ((ExpenseCategory) ((SpinnerAdapter)categorySpinner.getAdapter()).getItem(0));
+        //AccountEntryCategory category = ((AccountEntryCategory) ((SpinnerAdapter)categorySpinner.getAdapter()).getItem(0));
     }
 
     @Override
@@ -105,15 +104,15 @@ public class AddExpensesOrIncomesActivity extends AppCompatActivity implements A
     }
 
     private void addNewExpenseDetail(){
-        View expenseDetailView = getLayoutInflater().inflate(R.layout.activity_add_expense_detail_view, null);
+        View expenseDetailView = getLayoutInflater().inflate(R.layout.activity_add_account_entry_detail_view, null);
         container.addView(expenseDetailView);
-        expenseDetailViews.add(new ExpenseDetailView(expenseDetailView, accountsAdapter));
+        accountEntryDetailViews.add(new AccountEntryDetailView(expenseDetailView, accountsAdapter));
     }
 
-    private void addNewExpenseDetail(ExpenseDetail expenseDetail){
-        View expenseDetailView = getLayoutInflater().inflate(R.layout.activity_add_expense_detail_view, null);
+    private void addNewExpenseDetail(AccountEntryDetail accountEntryDetail){
+        View expenseDetailView = getLayoutInflater().inflate(R.layout.activity_add_account_entry_detail_view, null);
         container.addView(expenseDetailView);
-        expenseDetailViews.add(new ExpenseDetailView(expenseDetailView, accountsAdapter, expenseDetail));
+        accountEntryDetailViews.add(new AccountEntryDetailView(expenseDetailView, accountsAdapter, accountEntryDetail));
     }
 
     private void updateLabel() {
@@ -134,7 +133,7 @@ public class AddExpensesOrIncomesActivity extends AppCompatActivity implements A
     }
 
     @Override
-    public void notifyExpenseCreated(long id) {
+    public void notifyAccountEntryCreated(long id) {
         Intent returnIntent = getIntent();
         returnIntent.putExtra("resultExpenseId", id);
         setResult(Activity.RESULT_OK, returnIntent);
@@ -157,30 +156,30 @@ public class AddExpensesOrIncomesActivity extends AppCompatActivity implements A
         createOrUpdateExpense();
     }
     private void createOrUpdateExpense(){
-       if (isNewExpense) createExpense() ; else updateExpense();
+       if (isNewAccountEntry) createExpense() ; else updateExpense();
     }
     @SuppressWarnings("ConstantConditions")
     private void createExpense(){
-        List<ExpenseDetail> expenseDetails = new ArrayList<>();
-        for (ExpenseDetailView expenseDetailView: expenseDetailViews){
-            expenseDetails.add(expenseDetailView.getDetail());
+        List<AccountEntryDetail> accountEntryDetails = new ArrayList<>();
+        for (AccountEntryDetailView accountEntryDetailView : accountEntryDetailViews){
+            accountEntryDetails.add(accountEntryDetailView.getDetail());
         }
         long expenseCategoryId = getSelectedSpinnerItem(categorySpinner).getId();
-        presenter.createExpense(nameEdit.getText().toString(), dateEdit.getText().toString(), expenseCategoryId, expenseDetails);
-        isNewExpense = false;
+        presenter.createAccountEntry(nameEdit.getText().toString(), dateEdit.getText().toString(), expenseCategoryId, accountEntryDetails);
+        isNewAccountEntry = false;
     }
 
     @SuppressWarnings("ConstantConditions")
     private void updateExpense(){
-        expenseWithDetails.getExpense().setName(nameEdit.getText().toString());
-        expenseWithDetails.getExpense().setDate(MyUtils.toDate(dateEdit.getText().toString()));
+        accountEntryWithDetails.getAccountEntry().setName(nameEdit.getText().toString());
+        accountEntryWithDetails.getAccountEntry().setDate(MyUtils.toDate(dateEdit.getText().toString()));
         long expenseCategoryId = getSelectedSpinnerItem(categorySpinner).getId();
-        expenseWithDetails.getExpense().setExpenseCategoryId(expenseCategoryId);
-        //TODO: Remove these lines since the number of expense items may change on expense modification
-        for (int i = 0; i < expenseDetailViews.size(); i++){
-            expenseDetailViews.get(i).getDetail();
+        accountEntryWithDetails.getAccountEntry().setAccountEntryCategoryId(expenseCategoryId);
+        //TODO: Remove these lines since the number of accountEntry items may change on accountEntry modification
+        for (int i = 0; i < accountEntryDetailViews.size(); i++){
+            accountEntryDetailViews.get(i).getDetail();
         }
-        presenter.updateExpense(expenseWithDetails);
+        presenter.updateAccountEntry(accountEntryWithDetails);
     }
 
     private BaseEntity getSelectedSpinnerItem(Spinner spinner){
@@ -188,17 +187,17 @@ public class AddExpensesOrIncomesActivity extends AppCompatActivity implements A
         return ((SpinnerAdapter)spinner.getAdapter()).getItem(selectedIndex);
     }
 
-    public class ExpenseDetailView{
+    public class AccountEntryDetailView {
         private Spinner spinner;
         private EditText valueEdit;
-        private ExpenseDetail details;
+        private AccountEntryDetail details;
 
-        ExpenseDetailView(View v, SpinnerAdapter adapter) {
+        AccountEntryDetailView(View v, SpinnerAdapter adapter) {
             initializeViews(v, adapter);
-            details = new ExpenseDetail();
+            details = new AccountEntryDetail();
         }
 
-        ExpenseDetailView(View v, SpinnerAdapter adapter, ExpenseDetail details) {
+        AccountEntryDetailView(View v, SpinnerAdapter adapter, AccountEntryDetail details) {
             initializeViews(v, adapter);
             this.details = details;
             valueEdit.setText(MyUtils.formatCurrency(details.getValue()));
@@ -210,7 +209,7 @@ public class AddExpensesOrIncomesActivity extends AppCompatActivity implements A
             spinner.setAdapter(adapter);
         }
 
-        ExpenseDetail getDetail(){
+        AccountEntryDetail getDetail(){
             details.setValue(valueEdit.getText().toString().equals("") ? 0 : Double.parseDouble(valueEdit.getText().toString().substring(1)));
             details.setAccountId(getSelectedSpinnerItem(spinner).getId());
             return details;

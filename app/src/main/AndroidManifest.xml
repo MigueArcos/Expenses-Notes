@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.add_expense_or_income_activity.AddExpensesOrIncomesActivity"
+            android:name=".ui.add_expense_or_income_activity.AddAccountEntryActivity"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

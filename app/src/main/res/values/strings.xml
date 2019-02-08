@@ -14,24 +14,24 @@
     <string name="menu_drawer_settings_schedule_label">Programar horarios</string>
     <string name="menu_drawer_settings_about_label">Acerca De…</string>
     <string name="menu_drawer_settings_close_session">Cerrar sesión</string>
-    <string name="fragment_expenses_title">Gastos</string>
+    <string name="fragment_account_entries_title">Gastos</string>
     <string name="fragment_my_money_title">Mi dinero</string>
     <string name="fragment_notepad_title">Bloc de Notas</string>
     <string name="fragment_deleted_notes_title">Notas Eliminadas</string>
 
-    <!-- Activity Add Expense or Income resources -->
-    <string name="activity_add_expense_name_edit">Título</string>
-    <string name="activity_add_expense_category_text">Categoría</string>
-    <string name="activity_add_expense_account_text">Cuenta</string>
+    <!-- Activity Add AccountEntry or Income resources -->
+    <string name="activity_add_account_entry_name_edit">Título</string>
+    <string name="activity_add_account_entry_category_text">Categoría</string>
+    <string name="activity_add_account_entry_account_text">Cuenta</string>
     <string name="empty_list_label">No hay datos</string>
-    <string name="activity_add_expenses_value_hint">Valor</string>
+    <string name="activity_add_account_entries_value_hint">Valor</string>
 
-    <string-array name="expenses_categories">
-        <item>{"name":"Cómida", "iconId":1}</item>
-        <item>{"name":"Transporte", "iconId":1}</item>
-        <item>{"name":"Todo el dia alv","iconId":1}</item>
-        <item>{"name":"Belleza","iconId":1}</item>
-        <item>{"name":"Mascota","iconId":1}</item>
+    <string-array name="account_entries_categories">
+        <item>Cómida</item>
+        <item>Transporte</item>
+        <item>Todo el día alv</item>
+        <item>Belleza</item>
+        <item>Mascota</item>
     </string-array>
 
     <string-array name="icon_names">

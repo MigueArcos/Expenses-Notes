@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.add_expense_or_income_activity.AddExpensesOrIncomesActivity">
+    tools:context=".ui.add_expense_or_income_activity.AddAccountEntryActivity">
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:hint="@string/activity_add_expense_name_edit"
+                android:hint="@string/activity_add_account_entry_name_edit"
                 android:singleLine="true"
                 android:textSize="25sp"
                 android:maxLength="40"
@@ -47,7 +47,7 @@
                 android:layout_marginTop="8dp"
                 android:textSize="15sp"
                 android:gravity="start"
-                android:text="@string/activity_add_expense_category_text"/>
+                android:text="@string/activity_add_account_entry_category_text"/>
 
             <Spinner
                 android:id="@+id/category_spinner"
