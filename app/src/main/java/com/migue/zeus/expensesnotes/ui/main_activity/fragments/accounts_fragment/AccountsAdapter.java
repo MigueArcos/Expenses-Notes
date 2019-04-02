@@ -1,4 +1,4 @@
-package com.migue.zeus.expensesnotes.ui.main_activity.fragments.finances_fragment;
+package com.migue.zeus.expensesnotes.ui.main_activity.fragments.accounts_fragment;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import com.migue.zeus.expensesnotes.R;
 
-public class FinancesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private FinancesContract.Presenter presenter;
+    private AccountsContract.Presenter presenter;
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
 
@@ -27,21 +27,21 @@ public class FinancesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEADER) {
-            View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_finance_header, parent, false);
-            return new FinancesHeaderItemView(layoutView);
+            View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_account_header, parent, false);
+            return new AccountsHeaderViewHolder(layoutView);
         } else if (viewType == TYPE_ITEM) {
-            View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_finance, parent, false);
-            return new FinanceItemView(layoutView);
+            View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_account, parent, false);
+            return new AccountHolderViewHolder(layoutView);
         }
         throw new RuntimeException("No match for " + viewType + ".");
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof FinancesHeaderItemView){
-            presenter.bindHeaderData((FinancesHeaderItemView) holder);
-        }else if(holder instanceof FinanceItemView){
-            presenter.bindHolderData((FinanceItemView) holder, position - 1);
+        if(holder instanceof AccountsHeaderViewHolder){
+            presenter.bindHeaderData((AccountsHeaderViewHolder) holder);
+        }else if(holder instanceof AccountHolderViewHolder){
+            presenter.bindHolderData((AccountHolderViewHolder) holder, position - 1);
         }
     }
 
@@ -57,12 +57,12 @@ public class FinancesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return TYPE_ITEM;
     }
 
-    public void setPresenter(FinancesContract.Presenter presenter) {
+    public void setPresenter(AccountsContract.Presenter presenter) {
         this.presenter = presenter;
     }
 
 
-    public class FinanceItemView extends RecyclerView.ViewHolder implements FinancesContract.ItemView {
+    public class AccountHolderViewHolder extends RecyclerView.ViewHolder implements AccountsContract.ItemHolderView {
         private ImageView icon;
         private TextView nameText, valueText;
 
@@ -70,7 +70,7 @@ public class FinancesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return icon;
         }
 
-        FinanceItemView(View itemView) {
+        AccountHolderViewHolder(View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.icon);
             nameText = itemView.findViewById(R.id.name);
@@ -94,7 +94,7 @@ public class FinancesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public class FinancesHeaderItemView extends RecyclerView.ViewHolder implements FinancesContract.HeaderItemView {
+    public class AccountsHeaderViewHolder extends RecyclerView.ViewHolder implements AccountsContract.HeaderHolderView {
         private ImageView icon;
         private TextView totalText;
 
@@ -102,10 +102,10 @@ public class FinancesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return icon;
         }
 
-        FinancesHeaderItemView(View itemView) {
+        AccountsHeaderViewHolder(View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.icon);
-            totalText = itemView.findViewById(R.id.total);
+            totalText = itemView.findViewById(R.id.total_text);
         }
 
         @Override

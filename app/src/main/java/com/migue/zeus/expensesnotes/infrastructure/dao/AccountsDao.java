@@ -15,4 +15,6 @@ import java.util.List;
 public interface AccountsDao extends BaseDao<Account>{
     @Query("SELECT * FROM Accounts")
     List<Account> getAllAccounts();
+    @Query("SELECT SUM(Value*ActiveAccount) FROM Accounts")
+    double getTotal();
 }

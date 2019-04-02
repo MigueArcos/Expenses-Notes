@@ -12,16 +12,7 @@ import com.migue.zeus.expensesnotes.data.models.AccountEntryCategory;
 import java.util.List;
 
 @Dao
-public interface AccountEntriesCategoriesDao {
+public interface AccountEntriesCategoriesDao extends BaseDao<AccountEntryCategory>{
     @Query("SELECT * FROM AccountEntriesCategories")
     List<AccountEntryCategory> getAllAccountEntriesCategories();
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(AccountEntryCategory... accountEntriesCategories);
-
-    @Update
-    void update(AccountEntryCategory... accountEntriesCategories);
-
-    @Delete
-    void delete(AccountEntryCategory... accountEntriesCategories);
 }

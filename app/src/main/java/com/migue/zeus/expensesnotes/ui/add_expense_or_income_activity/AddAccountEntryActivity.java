@@ -116,9 +116,7 @@ public class AddAccountEntryActivity extends AppCompatActivity implements AddAcc
     }
 
     private void updateLabel() {
-        SimpleDateFormat sdf = new SimpleDateFormat(MyUtils.DATE_FORMAT, Locale.US);
-
-        dateEdit.setText(sdf.format(myCalendar.getTime()));
+        dateEdit.setText(MyUtils.formatDate(myCalendar.getTime()));
     }
 
     @Override
@@ -200,7 +198,7 @@ public class AddAccountEntryActivity extends AppCompatActivity implements AddAcc
         AccountEntryDetailView(View v, SpinnerAdapter adapter, AccountEntryDetail details) {
             initializeViews(v, adapter);
             this.details = details;
-            valueEdit.setText(MyUtils.formatCurrency(details.getValue()));
+            valueEdit.setText(String.valueOf(details.getValue()));
             spinner.setSelection(((SpinnerAdapter) spinner.getAdapter()).getItemPosition(details.getAccountId()));
         }
         private void initializeViews(View v, SpinnerAdapter adapter){

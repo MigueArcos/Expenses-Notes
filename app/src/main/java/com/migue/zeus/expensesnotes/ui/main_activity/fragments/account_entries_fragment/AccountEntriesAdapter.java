@@ -1,4 +1,4 @@
-package com.migue.zeus.expensesnotes.ui.main_activity.fragments.accounts_entries_fragment;
+package com.migue.zeus.expensesnotes.ui.main_activity.fragments.account_entries_fragment;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,15 +10,21 @@ import android.widget.TextView;
 
 import com.migue.zeus.expensesnotes.R;
 import com.migue.zeus.expensesnotes.data.models.Finance;
-import com.migue.zeus.expensesnotes.infrastructure.utils.MyFilter;
+import com.migue.zeus.expensesnotes.infrastructure.utils.DataObserver;
+import com.migue.zeus.expensesnotes.infrastructure.utils.MyUtils;
 
-import static com.migue.zeus.expensesnotes.ui.main_activity.fragments.accounts_entries_fragment.AccountEntriesModel.HEADER_VIEW;
-import static com.migue.zeus.expensesnotes.ui.main_activity.fragments.accounts_entries_fragment.AccountEntriesModel.ITEM_VIEW;
-import static com.migue.zeus.expensesnotes.ui.main_activity.fragments.accounts_entries_fragment.AccountEntriesModel.MAIN_HEADER_VIEW;
+import static com.migue.zeus.expensesnotes.ui.main_activity.fragments.account_entries_fragment.AccountEntriesModel.HEADER_VIEW;
+import static com.migue.zeus.expensesnotes.ui.main_activity.fragments.account_entries_fragment.AccountEntriesModel.ITEM_VIEW;
+import static com.migue.zeus.expensesnotes.ui.main_activity.fragments.account_entries_fragment.AccountEntriesModel.MAIN_HEADER_VIEW;
 
 public class AccountEntriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private AccountEntriesContract.Presenter presenter;
+    private DataObserver dataObserver;
+
+    public void setDataObserver(DataObserver dataObserver) {
+        this.dataObserver = dataObserver;
+    }
 
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -31,13 +37,12 @@ public class AccountEntriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == MAIN_HEADER_VIEW) {
-            View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_item_account_entry_main_header, parent, false);
+            View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_account_entry_main_header, parent, false);
             return new MainHeaderViewHolder(layoutView);
         } else if (viewType == HEADER_VIEW) {
             View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_account_entry_header, parent, false);
             return new HeaderViewHolder(layoutView);
-        }
-        else if (viewType == ITEM_VIEW){
+        } else if (viewType == ITEM_VIEW) {
             View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_account_entry, parent, false);
             return new ItemViewHolder(layoutView);
         }
@@ -46,11 +51,12 @@ public class AccountEntriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        presenter.bindHolderItem((AccountEntriesContract.HolderView) holder, position);
+        presenter.bindHolderItem((AccountEntriesContract.HolderView<?>) holder, position);
     }
 
     @Override
     public int getItemCount() {
+        observeData();
         return presenter.getItemCount();
     }
 
@@ -63,6 +69,9 @@ public class AccountEntriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.presenter = presenter;
     }
 
+    public void observeData() {
+        if (dataObserver != null) dataObserver.observeData(presenter.getItemCount());
+    }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, AccountEntriesContract.HolderView<AccountEntriesModel.ItemModel> {
         private ImageView icon;
@@ -92,27 +101,33 @@ public class AccountEntriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder implements AccountEntriesContract.HolderView<AccountEntriesModel.HeaderModel> {
         private TextView totalText;
+        private TextView dateText;
+
         HeaderViewHolder(View itemView) {
             super(itemView);
-            totalText = itemView.findViewById(R.id.total);
+            totalText = itemView.findViewById(R.id.total_text);
+            dateText = itemView.findViewById(R.id.date_text);
         }
 
         @Override
         public void renderItem(AccountEntriesModel.HeaderModel headerModel) {
-            totalText.setText(String.valueOf(headerModel.getTotal()));
+            totalText.setText(MyUtils.formatCurrency(headerModel.getTotal()));
+            dateText.setText(MyUtils.formatDate(headerModel.getDate()));
         }
     }
 
     public class MainHeaderViewHolder extends RecyclerView.ViewHolder implements AccountEntriesContract.HolderView<AccountEntriesModel.MainHeaderModel> {
         private TextView totalText;
         private ImageView icon;
+
         MainHeaderViewHolder(View itemView) {
             super(itemView);
-            totalText = itemView.findViewById(R.id.total);
+            totalText = itemView.findViewById(R.id.total_text);
         }
+
         @Override
         public void renderItem(AccountEntriesModel.MainHeaderModel mainHeaderModel) {
-            totalText.setText(String.valueOf(mainHeaderModel.getTotal()));
+            totalText.setText(MyUtils.formatCurrency(mainHeaderModel.getTotal()));
         }
     }
 }

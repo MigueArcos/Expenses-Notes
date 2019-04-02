@@ -5,8 +5,11 @@
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/loader"
+        android:visibility="visible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/item_default_margin"
+        android:paddingRight="@dimen/item_default_margin">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"

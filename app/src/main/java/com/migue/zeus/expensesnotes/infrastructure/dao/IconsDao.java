@@ -13,16 +13,8 @@ import com.migue.zeus.expensesnotes.data.models.Icon;
 import java.util.List;
 
 @Dao
-public interface IconsDao {
+public interface IconsDao extends BaseDao<Icon>{
     @Query("SELECT * FROM Icons")
     List<Icon> getAllIcons();
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Icon... icons);
-
-    @Update
-    void update(Icon... icons);
-
-    @Delete
-    void delete(Icon... icons);
 }

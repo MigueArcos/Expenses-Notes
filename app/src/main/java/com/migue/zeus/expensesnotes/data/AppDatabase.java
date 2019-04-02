@@ -59,7 +59,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public synchronized static AppDatabase getInstance() {
         return Instance;
     }
-
+    /*It is possible to use a single trigger to manage account entries details modifications in this way:
+    value = value - old.value*(IsExpense or Income) + new.value*(IsExpense or Income)*/
     private static AppDatabase buildDatabase(final Context context) {
         return Room.databaseBuilder(context,
                 AppDatabase.class,
@@ -73,10 +74,17 @@ public abstract class AppDatabase extends RoomDatabase {
                                 "BEGIN\n" +
                                 "    UPDATE Accounts SET Value = Value + (new.Value * (SELECT Revenue FROM AccountEntries WHERE Id = new.AccountEntryId)) WHERE Id = new.AccountId;\n" +
                                 "END;");
-                        db.execSQL("CREATE TRIGGER UpdateAccountOnAccountEntryModification\n" +
+                        db.execSQL("CREATE TRIGGER UpdateAccountOnExpenseModification\n" +
                                 "AFTER UPDATE ON AccountEntriesDetails\n" +
+                                "WHEN (SELECT Revenue FROM AccountEntries WHERE Id = old.AccountEntryId) = -1" +
                                 "BEGIN\n" +
-                                "    UPDATE Accounts SET Value = Value + old.Value + (new.Value * (SELECT Revenue FROM AccountEntries WHERE Id = new.AccountEntryId)) WHERE Id = new.AccountId;\n" +
+                                "    UPDATE Accounts SET Value = Value + old.Value - new.Value WHERE Id = new.AccountId;\n" +
+                                "END;");
+                        db.execSQL("CREATE TRIGGER UpdateAccountOnIncomeModification\n" +
+                                "AFTER UPDATE ON AccountEntriesDetails\n" +
+                                "WHEN (SELECT Revenue FROM AccountEntries WHERE Id = old.AccountEntryId) = 1" +
+                                "BEGIN\n" +
+                                "    UPDATE Accounts SET Value = Value - old.Value + new.Value WHERE Id = new.AccountId;\n" +
                                 "END;");
                         db.execSQL("CREATE TRIGGER UpdateAccountOnAccountEntryDetailDeletion\n" +
                                 "BEFORE DELETE ON AccountEntriesDetails\n" +

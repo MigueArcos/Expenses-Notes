@@ -16,6 +16,7 @@
 
     <Spinner
         android:id="@+id/account_spinner"
+        android:prompt="@string/activity_add_account_entry_account_text"
         android:spinnerMode="dialog"
         android:layout_width="match_parent"
         android:layout_marginLeft="8dp"
@@ -23,18 +24,38 @@
         android:layout_marginTop="8dp"
         android:layout_height="wrap_content"/>
 
-    <EditText
-        android:id="@+id/value_edit"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:hint="@string/activity_add_account_entries_value_hint"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:singleLine="true"
-        android:textSize="25sp"
-        android:maxLength="40"
-        android:inputType="numberDecimal"/>
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_vertical"
+            android:textSize="25sp"
+            android:text="@string/dollar_sign"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"/>
+
+        <EditText
+            android:id="@+id/value_edit"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:hint="@string/activity_add_account_entries_value_hint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:singleLine="true"
+            android:textSize="25sp"
+            android:maxLength="40"
+            android:inputType="numberDecimal"
+            android:layout_weight="95"/>
+
+    </LinearLayout>
 
 </LinearLayout>

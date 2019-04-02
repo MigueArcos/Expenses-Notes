@@ -35,6 +35,11 @@ public class MyUtils {
         return currencyFormatter.format(number);
     }
 
+    public static String formatDate(Date date) {
+        DateFormat formatter = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+        return formatter.format(date);
+    }
+
     public static void fromStringDate(String date, Calendar calendar){
         try {
             calendar.setTime(dateFormat.parse(date));
@@ -51,7 +56,7 @@ public class MyUtils {
         }
     }
 
-    public static String formatDate(String dateFormatId) {
+    public static String formatCurrentDate(String dateFormatId) {
         DateFormat formatter = new SimpleDateFormat(dateFormatId, Locale.US);
         return formatter.format(new Date());
     }

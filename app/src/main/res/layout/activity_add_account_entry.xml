@@ -51,6 +51,7 @@
 
             <Spinner
                 android:id="@+id/category_spinner"
+                android:prompt="@string/activity_add_account_entry_category_text"
                 android:spinnerMode="dialog"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"

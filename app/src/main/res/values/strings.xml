@@ -8,6 +8,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- Main activity Strings-->
+    <string name="main_activity_request_write_permission">Por favor activa el permiso de escritura desde las opciones de Android para esta aplicación ya que es indispensable acceder al almacenamiento del teléfono para poder usar esta aplicación.</string>
+
     <!-- Menu drawer Strings -->
     <string name="menu_drawer_settings_label">Opciones</string>
     <string name="menu_drawer_settings_sync_label">Sincronizar</string>
@@ -25,6 +28,13 @@
     <string name="activity_add_account_entry_account_text">Cuenta</string>
     <string name="empty_list_label">No hay datos</string>
     <string name="activity_add_account_entries_value_hint">Valor</string>
+    <string name="dollar_sign">$</string>
+    <string name="write_permission">Permiso de escritura</string>
+    <string name="close_app_message">Salir</string>
+    <string name="activate_permission">Activar</string>
+    <string name="dialog_option_yes">Si</string>
+    <string name="dialog_option_no">No</string>
+
 
     <string-array name="account_entries_categories">
         <item>Cómida</item>

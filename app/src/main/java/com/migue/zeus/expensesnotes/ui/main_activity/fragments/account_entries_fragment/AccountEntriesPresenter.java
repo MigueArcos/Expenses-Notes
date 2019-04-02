@@ -1,4 +1,4 @@
-package com.migue.zeus.expensesnotes.ui.main_activity.fragments.accounts_entries_fragment;
+package com.migue.zeus.expensesnotes.ui.main_activity.fragments.account_entries_fragment;
 
 import com.migue.zeus.expensesnotes.data.models.AccountEntryWithDetails;
 import com.migue.zeus.expensesnotes.infrastructure.utils.MyFilter;
