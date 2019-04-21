@@ -66,32 +66,7 @@ class AccountEntry : BaseEntity {
         fun populateData(): Array<AccountEntry> {
 
             return arrayOf(
-                    AccountEntry("AccountEntry a", parseDate("2018-12-01"), 1),
-                    AccountEntry("AccountEntry b", parseDate("2018-12-01"), 2),
-                    AccountEntry("AccountEntry c", parseDate("2018-12-05"), 3),
-                    AccountEntry("AccountEntry d", parseDate("2018-12-07"), 4),
-                    AccountEntry("AccountEntry e", parseDate("2018-12-07"), 1),
-                    AccountEntry("AccountEntry f", parseDate("2018-12-10"), 1),
-                    AccountEntry("AccountEntry g", parseDate("2018-12-10"), 1),
-                    AccountEntry("AccountEntry h", parseDate("2018-12-10"), 1),
-                    AccountEntry("AccountEntry i", parseDate("2018-12-10"), 1),
-                    AccountEntry("AccountEntry j", parseDate("2018-12-10"), 1),
-                    AccountEntry("AccountEntry k", parseDate("2018-12-12"), 1),
-                    AccountEntry("AccountEntry l", parseDate("2018-12-12"), 1),
-                    AccountEntry("AccountEntry m", parseDate("2018-12-15"), 1),
-                    AccountEntry("AccountEntry n", parseDate("2018-12-15"), 1),
-                    AccountEntry("AccountEntry o", parseDate("2018-12-16"), 1),
-                    AccountEntry("AccountEntry p", parseDate("2018-12-16"), 1),
-                    AccountEntry("AccountEntry q", parseDate("2018-12-17"), 1),
-                    AccountEntry("AccountEntry r", parseDate("2018-12-18"), 1),
-                    AccountEntry("AccountEntry s", parseDate("2018-12-18"), 1),
-                    AccountEntry("AccountEntry t", parseDate("2018-12-18"), 1),
-                    AccountEntry("AccountEntry u", parseDate("2018-12-18"), 1),
-                    AccountEntry("AccountEntry v", parseDate("2018-12-18"), 1),
-                    AccountEntry("AccountEntry w", parseDate("2018-12-19"), 1),
-                    AccountEntry("AccountEntry x", parseDate("2018-12-22"), 1),
-                    AccountEntry("AccountEntry y", parseDate("2018-12-26"), 1),
-                    AccountEntry("AccountEntry z", parseDate("2018-12-29"), 1)
+
             )
         }
     }

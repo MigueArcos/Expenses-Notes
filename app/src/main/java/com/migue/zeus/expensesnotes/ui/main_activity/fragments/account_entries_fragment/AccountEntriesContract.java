@@ -8,7 +8,15 @@ public class AccountEntriesContract {
 
     public interface View {
         void onItemsReloaded();
+
         void onItemClick(int position, AccountEntryWithDetails accountEntryWithDetails);
+
+        void onItemLongClick(int position, AccountEntryWithDetails accountEntryWithDetails);
+
+        void notifyItemDeleted(int position);
+
+        void notifyItemChanged(int position);
+        void notifyDataChanged();
     }
 
     public interface Model {
@@ -20,7 +28,10 @@ public class AccountEntriesContract {
 
         void reloadItems();
 
-        AccountEntryWithDetails onItemClick(int position);
+        AccountEntryWithDetails getAccountEntry(int position);
+
+
+        void deleteAccountEntry(int position, AccountEntryWithDetails entryWithDetails);
     }
 
     public interface Presenter {
@@ -33,6 +44,11 @@ public class AccountEntriesContract {
         void reloadItems();
 
         void onItemClick(int position);
+
+        void onItemLongClick(int position);
+
+        void deleteAccountEntry(int position, AccountEntryWithDetails entryWithDetails);
+
     }
 
     public interface HolderView<Model extends MyFilter> {

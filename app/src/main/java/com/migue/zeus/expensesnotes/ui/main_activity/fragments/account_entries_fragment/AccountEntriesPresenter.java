@@ -6,10 +6,9 @@ import com.migue.zeus.expensesnotes.infrastructure.utils.MyFilter;
 public class AccountEntriesPresenter implements AccountEntriesContract.Presenter {
     private AccountEntriesContract.Model model;
     private AccountEntriesContract.View view;
-
-    public AccountEntriesPresenter(AccountEntriesContract.View view) {
+    public AccountEntriesPresenter(AccountEntriesContract.View view, boolean shouldShowExpenses) {
         this.view = view;
-        model = new AccountEntriesModel(this);
+        model = new AccountEntriesModel(this, shouldShowExpenses);
     }
 
 
@@ -37,7 +36,20 @@ public class AccountEntriesPresenter implements AccountEntriesContract.Presenter
 
     @Override
     public void onItemClick(int position) {
-        AccountEntryWithDetails accountEntryWithDetails = model.onItemClick(position);
+        AccountEntryWithDetails accountEntryWithDetails = model.getAccountEntry(position);
         view.onItemClick(position, accountEntryWithDetails);
     }
+
+    @Override
+    public void onItemLongClick(int position) {
+        AccountEntryWithDetails accountEntryWithDetails = model.getAccountEntry(position);
+        view.onItemLongClick(position, accountEntryWithDetails);
+    }
+
+    @Override
+    public void deleteAccountEntry(int position, AccountEntryWithDetails entryWithDetails) {
+        model.deleteAccountEntry(position, entryWithDetails);
+        view.notifyDataChanged();
+    }
+
 }

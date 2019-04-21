@@ -1,6 +1,7 @@
 package com.migue.zeus.expensesnotes.ui.main_activity.fragments.account_entries_fragment;
 
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,7 +28,8 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
     private AccountEntriesContract.Presenter presenter;
     private FloatingActionButton create;
     private AccountEntriesAdapter adapter;
-
+    private boolean shouldShowExpenses = false;
+    private AlertDialog dialogDeleteAccountEntry;
     public AccountEntriesFragment(){
     }
 
@@ -46,7 +48,8 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
                 loader.setRefreshing(isLoading);
             }
         });
-        presenter = new AccountEntriesPresenter(this);
+        shouldShowExpenses = getArguments() != null && getArguments().getBoolean("shouldShowExpenses");
+        presenter = new AccountEntriesPresenter(this, shouldShowExpenses);
         adapter = new AccountEntriesAdapter();
         adapter.setPresenter(presenter);
         adapter.setDataObserver(itemNumber -> emptyListLabel.setVisibility(itemNumber == 0 ? View.GONE : View.INVISIBLE));
@@ -56,12 +59,10 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
         list.setAdapter(adapter);
         //setHasOptionsMenu(true);
         create = rootView.findViewById(R.id.create_new_fab);
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getContext(), AddAccountEntryActivity.class);
-                startActivityForResult(i, CALL_ADD_ACCOUNT_ENTRY_ACTIVITY);
-            }
+        create.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), AddAccountEntryActivity.class);
+            i.putExtra("isExpense", shouldShowExpenses);
+            startActivityForResult(i, CALL_ADD_ACCOUNT_ENTRY_ACTIVITY);
         });
         loader.setRefreshing(false);
         return rootView;
@@ -82,8 +83,35 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
     public void onItemClick(int position, AccountEntryWithDetails accountEntryWithDetails) {
         Intent i = new Intent(getContext(), AddAccountEntryActivity.class);
         i.putExtra("AccountEntry", accountEntryWithDetails);
+        i.putExtra("isExpense", shouldShowExpenses);
         //i.putExtra("exp", new AccountEntryDetail(50, 1, 4664));
         startActivityForResult(i, CALL_ADD_ACCOUNT_ENTRY_ACTIVITY);
+    }
+
+    @Override
+    public void onItemLongClick(int position, AccountEntryWithDetails accountEntryWithDetails) {
+        dialogDeleteAccountEntry = new AlertDialog.Builder(getContext()).
+                setTitle(getString(R.string.delete_confirmation)).
+                setMessage(getString(R.string.delete_confirmation_warning)).
+                setNegativeButton(R.string.dialog_option_no, (dialog, which) -> {}).
+                setPositiveButton(R.string.dialog_option_yes, (d, w) -> {
+                   presenter.deleteAccountEntry(position, accountEntryWithDetails);
+                }).show();
+    }
+
+    @Override
+    public void notifyItemDeleted(int position) {
+        adapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void notifyItemChanged(int position) {
+        adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void notifyDataChanged() {
+        adapter.notifyDataSetChanged();
     }
 }
 

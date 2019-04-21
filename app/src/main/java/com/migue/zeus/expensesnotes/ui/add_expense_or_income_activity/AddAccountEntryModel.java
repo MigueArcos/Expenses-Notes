@@ -30,8 +30,8 @@ public class AddAccountEntryModel implements AddAccountEntryContract.Model {
     }
 
     @Override
-    public List<AccountEntryCategory> getAccountEntriesCategories() {
-        return database.accountEntriesCategoriesDao().getAllAccountEntriesCategories();
+    public List<AccountEntryCategory> getAccountEntriesCategories(boolean isExpense) {
+        return database.accountEntriesCategoriesDao().getAllAccountEntriesCategories(isExpense);
     }
 
     @Override
@@ -50,12 +50,13 @@ public class AddAccountEntryModel implements AddAccountEntryContract.Model {
     }
 
     @Override
-    public long createAccountEntry(String name, String date, long expenseCategoryId, List<AccountEntryDetail> details) {
+    public long createAccountEntry(String name, String date, long accountEntryCategoryId, List<AccountEntryDetail> details, boolean isExpense) {
         AccountEntry accountEntry = new AccountEntry();
         try {
             accountEntry.setDate(dateFormat.parse(date));
             accountEntry.setName(name);
-            accountEntry.setAccountEntryCategoryId(expenseCategoryId);
+            accountEntry.setRevenue(isExpense ? -1 : 1);
+            accountEntry.setAccountEntryCategoryId(accountEntryCategoryId);
             long id = database.accountEntriesDao().insert(accountEntry);
             for (AccountEntryDetail detail : details) {
                 detail.setAccountEntryId(id);

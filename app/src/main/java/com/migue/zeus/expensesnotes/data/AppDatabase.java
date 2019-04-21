@@ -76,13 +76,13 @@ public abstract class AppDatabase extends RoomDatabase {
                                 "END;");
                         db.execSQL("CREATE TRIGGER UpdateAccountOnExpenseModification\n" +
                                 "AFTER UPDATE ON AccountEntriesDetails\n" +
-                                "WHEN (SELECT Revenue FROM AccountEntries WHERE Id = old.AccountEntryId) = -1" +
+                                "WHEN (SELECT Revenue FROM AccountEntries WHERE Id = old.AccountEntryId) = -1\n" +
                                 "BEGIN\n" +
                                 "    UPDATE Accounts SET Value = Value + old.Value - new.Value WHERE Id = new.AccountId;\n" +
                                 "END;");
                         db.execSQL("CREATE TRIGGER UpdateAccountOnIncomeModification\n" +
                                 "AFTER UPDATE ON AccountEntriesDetails\n" +
-                                "WHEN (SELECT Revenue FROM AccountEntries WHERE Id = old.AccountEntryId) = 1" +
+                                "WHEN (SELECT Revenue FROM AccountEntries WHERE Id = old.AccountEntryId) = 1\n" +
                                 "BEGIN\n" +
                                 "    UPDATE Accounts SET Value = Value - old.Value + new.Value WHERE Id = new.AccountId;\n" +
                                 "END;");

@@ -65,35 +65,7 @@ class AccountEntryDetail : BaseEntity {
         fun populateData(): Array<AccountEntryDetail> {
 
             return arrayOf(
-                    AccountEntryDetail(1, 1, 54.5),
-                    AccountEntryDetail(1, 2, 10.0),
-                    AccountEntryDetail(1, 3, 11.5),
-                    AccountEntryDetail(2, 1, 24.5),
-                    AccountEntryDetail(2, 2, 12.5),
-                    AccountEntryDetail(3, 1, 46.0),
-                    AccountEntryDetail(4, 1, 324.5),
-                    AccountEntryDetail(5, 1, 324.5),
-                    AccountEntryDetail(6, 1, 324.5),
-                    AccountEntryDetail(7, 1, 324.5),
-                    AccountEntryDetail(8, 1, 324.5),
-                    AccountEntryDetail(9, 1, 324.5),
-                    AccountEntryDetail(10, 1, 324.5),
-                    AccountEntryDetail(11, 1, 324.5),
-                    AccountEntryDetail(12, 1, 324.5),
-                    AccountEntryDetail(13, 1, 324.5),
-                    AccountEntryDetail(14, 1, 324.5),
-                    AccountEntryDetail(15, 1, 324.5),
-                    AccountEntryDetail(16, 1, 324.5),
-                    AccountEntryDetail(17, 1, 324.5),
-                    AccountEntryDetail(18, 1, 324.5),
-                    AccountEntryDetail(19, 1, 324.5),
-                    AccountEntryDetail(20, 1, 324.5),
-                    AccountEntryDetail(21, 1, 324.5),
-                    AccountEntryDetail(22, 1, 324.5),
-                    AccountEntryDetail(23, 1, 324.5),
-                    AccountEntryDetail(24, 1, 324.5),
-                    AccountEntryDetail(25, 1, 324.5),
-                    AccountEntryDetail(26, 1, 324.5)
+
             )
         }
     }

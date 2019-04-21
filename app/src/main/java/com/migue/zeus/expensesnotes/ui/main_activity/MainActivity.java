@@ -18,7 +18,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -46,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private PackageManager packageManager;
     private ComponentName receiver;
     private AccountsFragment accountsFragment;
-    private AccountEntriesFragment accountEntriesFragment;
+    private AccountEntriesFragment expensesFragment;
+    private AccountEntriesFragment incomesFragment;
     private AlertDialog dialogRequestWritePermission;
 
     @Override
@@ -73,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }).
                     setCancelable(false).create();
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSION);
+        }
+        else{
+            initializeServices();
+            initializeFragments();
         }
     }
 
@@ -111,7 +115,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Fragment fragment = null;
                 switch (currentFragmentId) {
                     case R.id.expenses:
-                        fragment = accountEntriesFragment;
+                        fragment = expensesFragment;
+                        break;
+                    case R.id.revenues:
+                        fragment = incomesFragment;
                         break;
                     case R.id.money_manager:
                         fragment = accountsFragment;
@@ -145,7 +152,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initializeFragments() {
         accountsFragment = new AccountsFragment();
-        accountEntriesFragment = new AccountEntriesFragment();
+        expensesFragment = new AccountEntriesFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("shouldShowExpenses", true);
+        expensesFragment.setArguments(bundle);
+        incomesFragment = new AccountEntriesFragment();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

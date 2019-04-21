@@ -13,6 +13,6 @@ import java.util.List;
 
 @Dao
 public interface AccountEntriesCategoriesDao extends BaseDao<AccountEntryCategory>{
-    @Query("SELECT * FROM AccountEntriesCategories")
-    List<AccountEntryCategory> getAllAccountEntriesCategories();
+    @Query("SELECT * FROM AccountEntriesCategories WHERE IsExpense = :isExpense")
+    List<AccountEntryCategory> getAllAccountEntriesCategories(boolean isExpense);
 }

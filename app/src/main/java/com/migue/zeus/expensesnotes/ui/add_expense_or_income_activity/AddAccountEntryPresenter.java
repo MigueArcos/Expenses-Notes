@@ -21,8 +21,8 @@ public class AddAccountEntryPresenter implements AddAccountEntryContract.Present
     }
 
     @Override
-    public void getAccountEntryCategories() {
-        view.showCategories(model.getAccountEntriesCategories());
+    public void getAccountEntryCategories(boolean isExpense) {
+        view.showCategories(model.getAccountEntriesCategories(isExpense));
     }
 
     @Override
@@ -41,8 +41,8 @@ public class AddAccountEntryPresenter implements AddAccountEntryContract.Present
     }
 
     @Override
-    public void createAccountEntry(String name, String date, long expenseCategoryId, List<AccountEntryDetail> details) {
-        long id = model.createAccountEntry(name, date, expenseCategoryId, details);
+    public void createAccountEntry(String name, String date, long expenseCategoryId, List<AccountEntryDetail> details, boolean isExpense) {
+        long id = model.createAccountEntry(name, date, expenseCategoryId, details, isExpense);
         view.notifyAccountEntryCreated(id);
     }
 

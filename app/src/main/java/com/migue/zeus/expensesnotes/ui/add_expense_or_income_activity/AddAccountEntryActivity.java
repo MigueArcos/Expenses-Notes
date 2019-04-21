@@ -18,13 +18,12 @@ import com.migue.zeus.expensesnotes.data.models.BaseEntity;
 import com.migue.zeus.expensesnotes.data.models.AccountEntryCategory;
 import com.migue.zeus.expensesnotes.data.models.AccountEntryDetail;
 import com.migue.zeus.expensesnotes.data.models.AccountEntryWithDetails;
+import com.migue.zeus.expensesnotes.infrastructure.utils.MathAnalyzer;
 import com.migue.zeus.expensesnotes.infrastructure.utils.MyUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 public class AddAccountEntryActivity extends AppCompatActivity implements AddAccountEntryContract.View{
     private EditText nameEdit, dateEdit;
@@ -37,6 +36,7 @@ public class AddAccountEntryActivity extends AppCompatActivity implements AddAcc
     private final List<AccountEntryDetailView> accountEntryDetailViews = new ArrayList<>();
     private AccountEntryWithDetails accountEntryWithDetails;
     private boolean isNewAccountEntry = true;
+    private boolean isExpense = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +48,13 @@ public class AddAccountEntryActivity extends AppCompatActivity implements AddAcc
         container = findViewById(R.id.container);
 
         presenter.getAccounts();
-        presenter.getAccountEntryCategories();
+
 
         Bundle data = getIntent().getExtras();
-
+        isExpense = data != null && data.getBoolean("isExpense");
+        presenter.getAccountEntryCategories(isExpense);
         if (data != null && data.getParcelable("AccountEntry") != null){
             isNewAccountEntry = false;
-
             accountEntryWithDetails = data.getParcelable("AccountEntry");
             presenter.getAccountEntryDate(accountEntryWithDetails.getAccountEntry());
             presenter.getAccountEntryTitle(accountEntryWithDetails.getAccountEntry());
@@ -74,15 +74,12 @@ public class AddAccountEntryActivity extends AppCompatActivity implements AddAcc
                 // TODO Auto-generated method stub
                 new DatePickerDialog(
                         AddAccountEntryActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                myCalendar.set(Calendar.YEAR, year);
-                                myCalendar.set(Calendar.MONTH, month);
-                                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                updateLabel();
-                                addNewExpenseDetail();
-                            }
+                        (view, year, month, dayOfMonth) -> {
+                            myCalendar.set(Calendar.YEAR, year);
+                            myCalendar.set(Calendar.MONTH, month);
+                            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                            updateLabel();
+                            //addNewExpenseDetail();
                         },
                         myCalendar.get(Calendar.YEAR),
                         myCalendar.get(Calendar.MONTH),
@@ -142,7 +139,7 @@ public class AddAccountEntryActivity extends AppCompatActivity implements AddAcc
         switch (item.getItemId()) {
             //Back arrow
             case android.R.id.home:
-                createExpense();
+                createOrUpdateAccountEntry();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -151,28 +148,39 @@ public class AddAccountEntryActivity extends AppCompatActivity implements AddAcc
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        createOrUpdateExpense();
+        createOrUpdateAccountEntry();
     }
-    private void createOrUpdateExpense(){
-       if (isNewAccountEntry) createExpense() ; else updateExpense();
+    private void createOrUpdateAccountEntry(){
+       if (isNewAccountEntry) createAccountEntry() ; else updateExpense();
     }
     @SuppressWarnings("ConstantConditions")
-    private void createExpense(){
+    private void createAccountEntry(){
         List<AccountEntryDetail> accountEntryDetails = new ArrayList<>();
         for (AccountEntryDetailView accountEntryDetailView : accountEntryDetailViews){
             accountEntryDetails.add(accountEntryDetailView.getDetail());
         }
-        long expenseCategoryId = getSelectedSpinnerItem(categorySpinner).getId();
-        presenter.createAccountEntry(nameEdit.getText().toString(), dateEdit.getText().toString(), expenseCategoryId, accountEntryDetails);
-        isNewAccountEntry = false;
+        BaseEntity expenseCategory = getSelectedSpinnerItem(categorySpinner);
+        String accountEntryName =  nameEdit.getText().toString().equals(MyUtils.EmptyString) ? expenseCategory.getReadableName() : nameEdit.getText().toString();
+        if (getSumOfEntries(accountEntryDetails) != 0){
+            presenter.createAccountEntry(accountEntryName, dateEdit.getText().toString(), expenseCategory.getId(), accountEntryDetails, isExpense);
+            isNewAccountEntry = false;
+        }
+    }
+    private double getSumOfEntries(List<AccountEntryDetail> details){
+        double sum = 0;
+        for (AccountEntryDetail detail : details){
+            sum += detail.getValue();
+        }
+        return sum;
     }
 
     @SuppressWarnings("ConstantConditions")
     private void updateExpense(){
-        accountEntryWithDetails.getAccountEntry().setName(nameEdit.getText().toString());
+        BaseEntity expenseCategory = getSelectedSpinnerItem(categorySpinner);
+        String accountEntryName =  nameEdit.getText().toString().equals(MyUtils.EmptyString) ? expenseCategory.getReadableName() : nameEdit.getText().toString();
+        accountEntryWithDetails.getAccountEntry().setName(accountEntryName);
         accountEntryWithDetails.getAccountEntry().setDate(MyUtils.toDate(dateEdit.getText().toString()));
-        long expenseCategoryId = getSelectedSpinnerItem(categorySpinner).getId();
-        accountEntryWithDetails.getAccountEntry().setAccountEntryCategoryId(expenseCategoryId);
+        accountEntryWithDetails.getAccountEntry().setAccountEntryCategoryId(expenseCategory.getId());
         //TODO: Remove these lines since the number of accountEntry items may change on accountEntry modification
         for (int i = 0; i < accountEntryDetailViews.size(); i++){
             accountEntryDetailViews.get(i).getDetail();
@@ -198,7 +206,7 @@ public class AddAccountEntryActivity extends AppCompatActivity implements AddAcc
         AccountEntryDetailView(View v, SpinnerAdapter adapter, AccountEntryDetail details) {
             initializeViews(v, adapter);
             this.details = details;
-            valueEdit.setText(String.valueOf(details.getValue()));
+            valueEdit.setText(MyUtils.formatCurrency(details.getValue()).replace("$",""));
             spinner.setSelection(((SpinnerAdapter) spinner.getAdapter()).getItemPosition(details.getAccountId()));
         }
         private void initializeViews(View v, SpinnerAdapter adapter){
@@ -208,7 +216,9 @@ public class AddAccountEntryActivity extends AppCompatActivity implements AddAcc
         }
 
         AccountEntryDetail getDetail(){
-            details.setValue(valueEdit.getText().toString().equals("") ? 0 : Double.parseDouble(valueEdit.getText().toString().substring(1)));
+            double value = valueEdit.getText().toString().equals("") ? 0 : MathAnalyzer.evaluate(valueEdit.getText().toString());
+
+            details.setValue(value);
             details.setAccountId(getSelectedSpinnerItem(spinner).getId());
             return details;
         }

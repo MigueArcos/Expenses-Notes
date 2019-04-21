@@ -36,13 +36,10 @@
     <string name="dialog_option_no">No</string>
 
 
-    <string-array name="account_entries_categories">
-        <item>Cómida</item>
-        <item>Transporte</item>
-        <item>Todo el día alv</item>
-        <item>Belleza</item>
-        <item>Mascota</item>
-    </string-array>
+    <string name="account_entries_categories">[{\"name\":\"C\u00F3mida\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Transporte\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Mascota\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Belleza y Cuidado Personal\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Salud\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Despensa\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Gastos de Casa\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Chucherias\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Compras\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Tel\u00E9fono\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Autom\u00F3vil\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Viajes\",\"iconId\":\"1\",\"isExpense\":true},{\"name\":\"Salario\",\"iconId\":\"1\",\"isExpense\":false},{\"name\":\"Premios\",\"iconId\":\"1\",\"isExpense\":false},{\"name\":\"Inversiones\",\"iconId\":\"1\",\"isExpense\":false},{\"name\":\"Trabajos extras\",\"iconId\":\"1\",\"isExpense\":false}]</string>
+    <string name="fragment_revenues_title">Ingresos</string>
+    <string name="delete_confirmation">¿Estás seguro de eliminar esto?</string>
+    <string name="delete_confirmation_warning">Si eliminas, no podrás volver a recuperarlo</string>
 
     <string-array name="icon_names">
         <item>Dog</item>

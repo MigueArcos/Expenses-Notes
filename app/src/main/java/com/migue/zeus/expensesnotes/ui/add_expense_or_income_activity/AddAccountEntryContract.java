@@ -18,20 +18,20 @@ public class AddAccountEntryContract {
     }
     interface Model {
         List<Account> getAccounts();
-        List<AccountEntryCategory> getAccountEntriesCategories();
+        List<AccountEntryCategory> getAccountEntriesCategories(boolean isExpense);
         String getAccountEntryTitle(AccountEntry accountEntry);
         String getAccountEntryDate(AccountEntry accountEntry);
         String getAccountEntryDate();
-        long createAccountEntry(String name, String date, long expenseCategoryId, List<AccountEntryDetail> details);
+        long createAccountEntry(String name, String date, long expenseCategoryId, List<AccountEntryDetail> details, boolean isExpense);
         void updateAccountEntry(AccountEntryWithDetails accountEntryWithDetails);
     }
     interface Presenter{
         void getAccounts();
-        void getAccountEntryCategories();
+        void getAccountEntryCategories(boolean isExpense);
         void getAccountEntryTitle(AccountEntry accountEntry);
         void getAccountEntryDate(AccountEntry accountEntry);
         void getAccountEntryDate();
-        void createAccountEntry(String name, String date, long expenseCategoryId, List<AccountEntryDetail> details);
+        void createAccountEntry(String name, String date, long expenseCategoryId, List<AccountEntryDetail> details, boolean isExpense);
         void updateAccountEntry(AccountEntryWithDetails accountEntryWithDetails);
     }
 }

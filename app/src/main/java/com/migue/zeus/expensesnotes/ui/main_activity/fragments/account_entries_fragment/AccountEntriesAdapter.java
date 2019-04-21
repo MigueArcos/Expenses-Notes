@@ -73,7 +73,7 @@ public class AccountEntriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (dataObserver != null) dataObserver.observeData(presenter.getItemCount());
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, AccountEntriesContract.HolderView<AccountEntriesModel.ItemModel> {
+    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener,  AccountEntriesContract.HolderView<AccountEntriesModel.ItemModel> {
         private ImageView icon;
         private TextView nameText, valueText;
 
@@ -83,6 +83,7 @@ public class AccountEntriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             nameText = itemView.findViewById(R.id.name);
             valueText = itemView.findViewById(R.id.creation_date);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
@@ -94,9 +95,15 @@ public class AccountEntriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public void renderItem(AccountEntriesModel.ItemModel itemModel) {
             icon.setImageResource(Finance.iconId);
             nameText.setText(itemModel.getAccountEntry().getAccountEntry().getName());
-            valueText.setText(String.valueOf(itemModel.getAccountEntry().getTotal()));
+            valueText.setText(MyUtils.formatCurrency(itemModel.getAccountEntry().getTotal()));
+
         }
 
+        @Override
+        public boolean onLongClick(View v) {
+            presenter.onItemLongClick(getAdapterPosition());
+            return true;
+        }
     }
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder implements AccountEntriesContract.HolderView<AccountEntriesModel.HeaderModel> {

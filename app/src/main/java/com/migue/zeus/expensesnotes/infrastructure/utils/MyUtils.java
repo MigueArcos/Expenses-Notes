@@ -19,6 +19,7 @@ public class MyUtils {
     public static final String DATE_TIME_FORMAT = "dd/MM/yyyy\' a las \'hh:mm a";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+    public static final String EmptyString = "";
     public static void hideKeyboard(Activity activity) {
         View view = activity.getCurrentFocus();
         if (view != null) {

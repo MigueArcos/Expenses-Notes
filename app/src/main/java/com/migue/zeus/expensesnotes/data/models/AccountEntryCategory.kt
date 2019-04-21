@@ -6,6 +6,9 @@ import android.os.Parcel
 import android.os.Parcelable
 
 import com.migue.zeus.expensesnotes.R
+import com.google.gson.Gson
+
+
 
 @Entity(
         tableName = "AccountEntriesCategories",
@@ -19,13 +22,13 @@ class AccountEntryCategory : BaseEntity {
     var name: String? = null
     @ColumnInfo(name = "IconId")
     var iconId: Long? = null
-    @ColumnInfo(name = "IsRevenue")
-    var isRevenue: Boolean? = false
+    @ColumnInfo(name = "IsExpense")
+    var isExpense: Boolean? = false
 
     constructor(parcel: Parcel) : super(parcel) {
         name = parcel.readString()
         iconId = parcel.readValue(Long::class.java.classLoader) as? Long
-        isRevenue = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
+        isExpense = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
     }
 
     constructor()
@@ -62,14 +65,9 @@ class AccountEntryCategory : BaseEntity {
         }
 
         fun populateData(context: Context): Array<AccountEntryCategory?> {
-            val rawCategories = context.resources.getStringArray(R.array.account_entries_categories)
-            val categories = arrayOfNulls<AccountEntryCategory>(rawCategories.size)
-            //Type type = new TypeToken<Map<String, String>>(){}.getType();
-            //Map<String, String> myMap = gson.fromJson("{'k1':'apple','k2':'orange'}", type);
-            for ((i, rawCategory) in rawCategories.withIndex()) {
-                categories[i] = AccountEntryCategory(rawCategory, 1)
-            }
-            return categories
+            var text = context.resources.getString(R.string.account_entries_categories)
+            var categories = Gson().fromJson(context.resources.getString(R.string.account_entries_categories), Array<AccountEntryCategory?>::class.java)
+            return Gson().fromJson(context.resources.getString(R.string.account_entries_categories), Array<AccountEntryCategory?>::class.java)
         }
     }
 

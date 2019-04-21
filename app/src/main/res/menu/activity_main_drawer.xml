@@ -6,6 +6,12 @@
             android:id="@+id/expenses"
             android:icon="@drawable/ic_payment_grey"
             android:title="@string/fragment_account_entries_title" />
+
+        <item
+            android:id="@+id/revenues"
+            android:icon="@drawable/ic_payment_grey"
+            android:title="@string/fragment_revenues_title" />
+
         <item
             android:id="@+id/money_manager"
             android:icon="@drawable/ic_attach_money_grey"
