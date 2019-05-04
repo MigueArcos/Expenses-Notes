@@ -11,9 +11,16 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.migue.zeus.expensesnotes.R;
 import com.migue.zeus.expensesnotes.data.models.AccountEntryWithDetails;
@@ -30,6 +37,7 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
     private AccountEntriesAdapter adapter;
     private boolean shouldShowExpenses = false;
     private AlertDialog dialogDeleteAccountEntry;
+    private Spinner spinnerMonths, spinnerYears;
     public AccountEntriesFragment(){
     }
 
@@ -65,13 +73,62 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
             startActivityForResult(i, CALL_ADD_ACCOUNT_ENTRY_ACTIVITY);
         });
         loader.setRefreshing(false);
+        setHasOptionsMenu(true);
         return rootView;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        presenter.reloadItems();
+        int year = spinnerYears.getSelectedItemPosition() != 0 ? Integer.parseInt(spinnerYears.getSelectedItem().toString()) : 0;
+        presenter.reloadItems(spinnerMonths.getSelectedItemPosition(), year);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        inflater.inflate(R.menu.fragment_account_entries_menu, menu);
+        MenuItem menuSpinnerMonths = menu.findItem(R.id.spinner_month);
+        spinnerMonths = (Spinner) menuSpinnerMonths.getActionView();
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_item, getActivity().getResources().getStringArray(R.array.months_catalogue));
+        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMonths.setAdapter(monthAdapter);
+        spinnerMonths.setSelection(0, false);
+
+        MenuItem menuSpinnerYears = menu.findItem(R.id.spinner_year);
+        spinnerYears = (Spinner) menuSpinnerYears.getActionView();
+        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_item, getActivity().getResources().getStringArray(R.array.years_catalogue));
+        yearsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerYears.setAdapter(yearsAdapter);
+        spinnerYears.setSelection(0, false);
+
+
+        spinnerMonths.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int year = spinnerYears.getSelectedItemPosition() != 0 ? Integer.parseInt(spinnerYears.getSelectedItem().toString()) : 0;
+                presenter.reloadItems(position, year);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinnerYears.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int year = parent.getSelectedItemPosition() != 0 ? Integer.parseInt(parent.getSelectedItem().toString()) : 0;
+                presenter.reloadItems(spinnerMonths.getSelectedItemPosition(), year);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     @Override

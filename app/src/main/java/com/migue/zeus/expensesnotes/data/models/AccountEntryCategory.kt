@@ -65,8 +65,6 @@ class AccountEntryCategory : BaseEntity {
         }
 
         fun populateData(context: Context): Array<AccountEntryCategory?> {
-            var text = context.resources.getString(R.string.account_entries_categories)
-            var categories = Gson().fromJson(context.resources.getString(R.string.account_entries_categories), Array<AccountEntryCategory?>::class.java)
             return Gson().fromJson(context.resources.getString(R.string.account_entries_categories), Array<AccountEntryCategory?>::class.java)
         }
     }

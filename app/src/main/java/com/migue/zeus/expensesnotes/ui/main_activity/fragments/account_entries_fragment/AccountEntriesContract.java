@@ -3,6 +3,7 @@ package com.migue.zeus.expensesnotes.ui.main_activity.fragments.account_entries_
 
 import com.migue.zeus.expensesnotes.data.models.AccountEntryWithDetails;
 import com.migue.zeus.expensesnotes.infrastructure.utils.MyFilter;
+import com.migue.zeus.expensesnotes.infrastructure.utils.MyUtils;
 
 public class AccountEntriesContract {
 
@@ -22,26 +23,26 @@ public class AccountEntriesContract {
     public interface Model {
         int getItemCount();
 
-        <Model extends MyFilter> void bindHolderItem(HolderView<Model> holderView, int position);
+        <T extends MyFilter>  void bindHolderItem(HolderView<T> holderView, int position);
 
         int getViewType(int position);
 
-        void reloadItems();
+        void reloadItems(int month, int year);
 
         AccountEntryWithDetails getAccountEntry(int position);
 
-
         void deleteAccountEntry(int position, AccountEntryWithDetails entryWithDetails);
+
     }
 
     public interface Presenter {
-        <Model extends MyFilter> void bindHolderItem(HolderView<Model> holderView, int position);
+        <Model extends MyFilter>  void bindHolderItem(HolderView<Model> holderView, int position);
 
         int getItemCount();
 
         int getViewType(int position);
 
-        void reloadItems();
+        void reloadItems(int month, int year);
 
         void onItemClick(int position);
 

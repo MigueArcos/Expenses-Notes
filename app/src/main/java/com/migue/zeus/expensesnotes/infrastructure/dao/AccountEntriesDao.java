@@ -17,6 +17,10 @@ public interface AccountEntriesDao extends BaseDao<AccountEntry>{
     @Query("SELECT DISTINCT Date FROM AccountEntries WHERE Revenue = :revenue ORDER BY Date DESC")
     List<Date> getAccountEntriesDates(int revenue);
 
+    @Query("SELECT DISTINCT Date FROM AccountEntries WHERE Revenue = :revenue AND strftime(:substitution, datetime(Date/1000, 'unixepoch')) = :search ORDER BY Date DESC")
+    List<Date> getAccountEntriesDates(int revenue, String substitution, String search);
+
+
     @Query("SELECT * FROM AccountEntries WHERE Id = :id")
     AccountEntryWithDetails getAccountEntryById(int id);
 

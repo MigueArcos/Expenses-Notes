@@ -74,13 +74,8 @@ class Account : BaseEntity {
         fun populateData(): Array<Account> {
 
             return arrayOf(
-                    Account("Caja", 3200.0, 1, 1),
-                    Account("Bancos", 2700.0, 1, 1),
-                    Account("Deuda Tia", 2500.0, 1, 1),
-                    Account("Deuda Mi Pa", 1000.0, 1, 1),
-                    Account("Acreedores", 1222.0, -1, 1),
-                    Account("Cuentas por pagar", 1234.0, -1, 1),
-                    Account("Algo de Amazon", 954.0, -1, 1)
+                    Account("Caja", 0.0, 1, 1),
+                    Account("Bancos", 0.0, 1, 1)
             )
         }
     }

@@ -25,12 +25,29 @@ public class AccountEntriesModel implements AccountEntriesContract.Model {
         this.shouldShowExpenses = shouldShowExpenses ? -1 : 1;
         accountEntriesDates = new ArrayList<>();
         items = new ArrayList<>();
-        loadAccountEntries();
+        loadAccountEntries(0, 0);
     }
 
-    private void loadAccountEntries() {
+    private void loadAccountEntries(int month, int year) {
         accountEntriesDates.clear();
-        accountEntriesDates.addAll(accountEntriesDao.getAccountEntriesDates(shouldShowExpenses));
+        if (month == 0 && year == 0){
+            accountEntriesDates.addAll(accountEntriesDao.getAccountEntriesDates(shouldShowExpenses));
+        }
+        else if (month == 0 && year != 0){
+            String substitution = "%Y";
+            String searchString = String.valueOf(year);
+            accountEntriesDates.addAll(accountEntriesDao.getAccountEntriesDates(shouldShowExpenses, substitution, searchString));
+        }
+        else if (month != 0 && year == 0){
+            String substitution = "%m";
+            String searchString = month < 10 ? "0" + month : "" +month;
+            accountEntriesDates.addAll(accountEntriesDao.getAccountEntriesDates(shouldShowExpenses, substitution, searchString));
+        }
+        else if (month != 0 && year != 0){
+            String substitution = "%Y-%m";
+            String searchString = String.valueOf(year) + "-" + (month < 10 ? "0" + month : "" +month);
+            accountEntriesDates.addAll(accountEntriesDao.getAccountEntriesDates(shouldShowExpenses, substitution, searchString));
+        }
         //items is a list containing all the data that is shown in recyclerView (3 distinct type of objects)
         items.clear();
         double total = 0;
@@ -59,8 +76,8 @@ public class AccountEntriesModel implements AccountEntriesContract.Model {
     }
 
     @Override
-    public <Model extends MyFilter> void bindHolderItem(AccountEntriesContract.HolderView<Model> holderView, int position) {
-        holderView.renderItem((Model) items.get(position).getItem());
+    public <T extends MyFilter>  void bindHolderItem(AccountEntriesContract.HolderView<T> holderView, int position) {
+        holderView.renderItem((T) items.get(position).getItem());
     }
 
 
@@ -70,8 +87,8 @@ public class AccountEntriesModel implements AccountEntriesContract.Model {
     }
 
     @Override
-    public void reloadItems() {
-        loadAccountEntries();
+    public void reloadItems(int month, int year) {
+        loadAccountEntries(month, year);
     }
 
     @Override

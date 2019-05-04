@@ -3,6 +3,7 @@ package com.migue.zeus.expensesnotes.ui.main_activity;
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.ProgressDialog;
+import android.arch.persistence.room.Database;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -21,12 +22,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.migue.zeus.expensesnotes.R;
 import com.migue.zeus.expensesnotes.data.AppDatabase;
+import com.migue.zeus.expensesnotes.data.models.AccountEntryDetail;
+import com.migue.zeus.expensesnotes.data.models.AccountEntryWithDetails;
 import com.migue.zeus.expensesnotes.infrastructure.Cache;
+import com.migue.zeus.expensesnotes.infrastructure.dao.AccountEntriesDao;
+import com.migue.zeus.expensesnotes.infrastructure.dao.AccountEntriesDetailsDao;
+import com.migue.zeus.expensesnotes.infrastructure.dao.AccountsDao;
 import com.migue.zeus.expensesnotes.infrastructure.utils.MyUtils;
 import com.migue.zeus.expensesnotes.ui.main_activity.fragments.account_entries_fragment.AccountEntriesFragment;
 import com.migue.zeus.expensesnotes.ui.main_activity.fragments.accounts_fragment.AccountsFragment;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -59,6 +69,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             checkPermissions();
         }
         initializeViews();
+
+
+        /*List<AccountEntryWithDetails> accountEntries =  new Gson().fromJson(getString(R.string.accounts_money_manager), new TypeToken<List<AccountEntryWithDetails>>(){}.getType());
+        AccountEntriesDao accountEntriesDao = AppDatabase.getInstance().accountEntriesDao();
+        AccountEntriesDetailsDao accountEntriesDetailsDao = AppDatabase.getInstance().accountEntriesDetailsDao();
+        for (AccountEntryWithDetails accountEntryWithDetails : accountEntries){
+            long id = accountEntriesDao.insert(accountEntryWithDetails.getAccountEntry());
+            for (AccountEntryDetail detail : accountEntryWithDetails.getAccountEntryDetails()) {
+                detail.setAccountEntryId(id);
+                accountEntriesDetailsDao.insert(detail);
+            }
+        }*/
         //Services will be initialized when the write permission is granted (in that callback)
     }
 
@@ -103,10 +125,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
     private void initializeViews() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             @Override
@@ -116,12 +138,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (currentFragmentId) {
                     case R.id.expenses:
                         fragment = expensesFragment;
+                        //toolbar.findViewById(R.id.spinner_years).setVisibility(View.VISIBLE);
+                        //toolbar.findViewById(R.id.spinner_months).setVisibility(View.VISIBLE);
+                        getSupportActionBar().setDisplayShowTitleEnabled(false);
                         break;
                     case R.id.revenues:
                         fragment = incomesFragment;
+                        //toolbar.findViewById(R.id.spinner_years).setVisibility(View.VISIBLE);
+                        //toolbar.findViewById(R.id.spinner_months).setVisibility(View.VISIBLE);
+                        getSupportActionBar().setDisplayShowTitleEnabled(false);
                         break;
                     case R.id.money_manager:
                         fragment = accountsFragment;
+                        //toolbar.findViewById(R.id.spinner_years).setVisibility(View.GONE);
+                        //toolbar.findViewById(R.id.spinner_months).setVisibility(View.GONE);
+                        getSupportActionBar().setDisplayShowTitleEnabled(true);
                         break;
                     case R.id.notes:
                         break;
@@ -145,7 +176,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+    private void setToolbar(int currentFragmentId){
 
+    }
     private void initializeServices() {
         AppDatabase.getInstance(this);
     }

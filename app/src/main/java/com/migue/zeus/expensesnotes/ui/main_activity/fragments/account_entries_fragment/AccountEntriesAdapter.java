@@ -73,7 +73,7 @@ public class AccountEntriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (dataObserver != null) dataObserver.observeData(presenter.getItemCount());
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener,  AccountEntriesContract.HolderView<AccountEntriesModel.ItemModel> {
+    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, AccountEntriesContract.HolderView<AccountEntriesModel.ItemModel> {
         private ImageView icon;
         private TextView nameText, valueText;
 

@@ -21,7 +21,6 @@ public class MathAnalyzer {
         Stack<Character> ops = new Stack<Character>();
 
         for (int i = 0; i < tokens.length; i++) {
-            char tChar = tokens[i];
             // Current token is a whitespace, skip it
             if (tokens[i] == ' ')
                 continue;
@@ -46,7 +45,9 @@ public class MathAnalyzer {
                 while (ops.peek() != '(')
                     values.push(applyOp(ops.pop(), values.pop(), values.pop()));
                 ops.pop();
-            } else if (tokens[i] == '-' && values.empty()) {
+            }
+            //Simple way to manage negative numbers
+            else if (tokens[i] == '-' && values.empty()) {
                 StringBuilder builder = new StringBuilder();
                 i++;
                 builder.append(tokens[i]);

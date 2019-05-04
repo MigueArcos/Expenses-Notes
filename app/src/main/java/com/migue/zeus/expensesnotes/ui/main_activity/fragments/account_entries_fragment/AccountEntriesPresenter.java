@@ -29,8 +29,8 @@ public class AccountEntriesPresenter implements AccountEntriesContract.Presenter
     }
 
     @Override
-    public void reloadItems() {
-        model.reloadItems();
+    public void reloadItems(int month, int year) {
+        model.reloadItems(month, year);
         view.onItemsReloaded();
     }
 
