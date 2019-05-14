@@ -26,6 +26,9 @@ import com.migue.zeus.expensesnotes.R;
 import com.migue.zeus.expensesnotes.data.models.AccountEntryWithDetails;
 import com.migue.zeus.expensesnotes.ui.add_expense_or_income_activity.AddAccountEntryActivity;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class AccountEntriesFragment extends Fragment implements AccountEntriesContract.View{
     public static final int CALL_ADD_ACCOUNT_ENTRY_ACTIVITY = 1;
     private RecyclerView list;
@@ -38,6 +41,7 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
     private boolean shouldShowExpenses = false;
     private AlertDialog dialogDeleteAccountEntry;
     private Spinner spinnerMonths, spinnerYears;
+    private final Calendar myCalendar = Calendar.getInstance();
     public AccountEntriesFragment(){
     }
 
@@ -74,6 +78,7 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
         });
         loader.setRefreshing(false);
         setHasOptionsMenu(true);
+        myCalendar.setTime(new Date());
         return rootView;
     }
 
@@ -93,19 +98,19 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
         ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_item, getActivity().getResources().getStringArray(R.array.months_catalogue));
         monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMonths.setAdapter(monthAdapter);
-        spinnerMonths.setSelection(0, false);
 
         MenuItem menuSpinnerYears = menu.findItem(R.id.spinner_year);
         spinnerYears = (Spinner) menuSpinnerYears.getActionView();
         ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_item, getActivity().getResources().getStringArray(R.array.years_catalogue));
         yearsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerYears.setAdapter(yearsAdapter);
-        spinnerYears.setSelection(0, false);
+        final int[] spinnerChecks = {0, 0};
 
 
         spinnerMonths.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (spinnerChecks[0]++ == 0) return;
                 int year = spinnerYears.getSelectedItemPosition() != 0 ? Integer.parseInt(spinnerYears.getSelectedItem().toString()) : 0;
                 presenter.reloadItems(position, year);
             }
@@ -119,6 +124,7 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
         spinnerYears.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (spinnerChecks[1]++ == 0) return;
                 int year = parent.getSelectedItemPosition() != 0 ? Integer.parseInt(parent.getSelectedItem().toString()) : 0;
                 presenter.reloadItems(spinnerMonths.getSelectedItemPosition(), year);
             }
@@ -129,7 +135,15 @@ public class AccountEntriesFragment extends Fragment implements AccountEntriesCo
             }
         });
 
+
+        int month = myCalendar.get(Calendar.MONTH) + 1;
+        int year = myCalendar.get(Calendar.YEAR);
+        spinnerMonths.setSelection(month, false);
+        //TODO: Change this selection for years
+        spinnerYears.setSelection(year - 2000 + 1, false);
+        presenter.reloadItems(month, year);
     }
+
 
     @Override
     public void onItemsReloaded() {

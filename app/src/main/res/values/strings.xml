@@ -53,7 +53,7 @@
     </string-array>
 
     <string-array name="years_catalogue">
-        <item>Selecciona...</item>
+        <item>Año…</item>
         <item>2000</item>
         <item>2001</item>
         <item>2002</item>
@@ -78,7 +78,7 @@
     </string-array>
 
     <string-array name="months_catalogue">
-        <item>Selecciona...</item>
+        <item>Mes…</item>
         <item>Enero</item>
         <item>Febrero</item>
         <item>Marzo</item>

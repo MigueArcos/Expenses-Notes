@@ -7,6 +7,7 @@ import com.migue.zeus.expensesnotes.infrastructure.dao.AccountEntriesDao;
 import com.migue.zeus.expensesnotes.infrastructure.utils.MyFilter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class AccountEntriesModel implements AccountEntriesContract.Model {
         this.shouldShowExpenses = shouldShowExpenses ? -1 : 1;
         accountEntriesDates = new ArrayList<>();
         items = new ArrayList<>();
-        loadAccountEntries(0, 0);
+        //loadAccountEntries(myCalendar.get(Calendar.MONTH) + 1, myCalendar.get(Calendar.YEAR));
     }
 
     private void loadAccountEntries(int month, int year) {
